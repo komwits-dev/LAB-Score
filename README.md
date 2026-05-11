@@ -171,11 +171,23 @@ This separation is important because run_dbCAN can create Python dependency conf
 
 ### Recommended installation command
 
+Replace `/path/to/dbcan_database` with the directory where you want to store or already have the dbCAN database.
+
 ```bash
 bash install.sh \
   --env-name lab_score_clean \
   --dbcan-env-name dbcan_clean \
-  --dbcan-db-dir /media/mecob/komwit/db/dbcan \
+  --dbcan-db-dir /path/to/dbcan_database \
+  --skip-optional
+```
+
+Example using a project-local database directory:
+
+```bash
+bash install.sh \
+  --env-name lab_score_clean \
+  --dbcan-env-name dbcan_clean \
+  --dbcan-db-dir ./databases/dbcan \
   --skip-optional
 ```
 
@@ -186,7 +198,17 @@ bash run_all.sh \
   --check-only \
   --env lab_score_clean \
   --dbcan-env-name dbcan_clean \
-  --dbcan-db-dir /media/mecob/komwit/db/dbcan
+  --dbcan-db-dir /path/to/dbcan_database
+```
+
+For the project-local example above:
+
+```bash
+bash run_all.sh \
+  --check-only \
+  --env lab_score_clean \
+  --dbcan-env-name dbcan_clean \
+  --dbcan-db-dir ./databases/dbcan
 ```
 
 ### Useful installation options
@@ -210,7 +232,7 @@ Use this option if run_dbCAN is broken or if the system accidentally uses an old
 bash install.sh \
   --env-name lab_score_clean \
   --dbcan-env-name dbcan_clean \
-  --dbcan-db-dir /media/mecob/komwit/db/dbcan \
+  --dbcan-db-dir /path/to/dbcan_database \
   --recreate-dbcan-env \
   --skip-optional
 ```
@@ -228,7 +250,7 @@ bash run_all.sh \
   -t 32 \
   --env lab_score_clean \
   --dbcan-env-name dbcan_clean \
-  --dbcan-db-dir /media/mecob/komwit/db/dbcan
+  --dbcan-db-dir ./databases/dbcan
 ```
 
 ### Option 2: Run from existing Prokka results
@@ -240,7 +262,7 @@ bash run_all.sh \
   -t 32 \
   --env lab_score_clean \
   --dbcan-env-name dbcan_clean \
-  --dbcan-db-dir /media/mecob/komwit/db/dbcan \
+  --dbcan-db-dir ./databases/dbcan \
   --skip-install \
   -n
 ```

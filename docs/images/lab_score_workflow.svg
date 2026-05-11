@@ -1,110 +1,123 @@
-<svg width="1500" height="930" viewBox="0 0 1500 930" xmlns="http://www.w3.org/2000/svg">
+<svg width="1600" height="980" viewBox="0 0 1600 980" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#F6FBF7"/>
+      <stop offset="0%" stop-color="#F8FCF9"/>
       <stop offset="100%" stop-color="#EAF7F0"/>
     </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#0D3B2E" flood-opacity="0.16"/>
+      <feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#0D3B2E" flood-opacity="0.16"/>
     </filter>
     <style>
-      .title{font:700 42px Arial,Helvetica,sans-serif;fill:#123D32}
-      .subtitle{font:400 19px Arial,Helvetica,sans-serif;fill:#48665C}
-      .box-title{font:700 20px Arial,Helvetica,sans-serif;fill:#123D32}
-      .box-text{font:400 15px Arial,Helvetica,sans-serif;fill:#31584D}
-      .small{font:700 13px Arial,Helvetica,sans-serif;fill:#FFFFFF}
+      .title{font:700 46px Arial,Helvetica,sans-serif;fill:#123D32}
+      .subtitle{font:400 20px Arial,Helvetica,sans-serif;fill:#48665C}
+      .box-title{font:700 22px Arial,Helvetica,sans-serif;fill:#123D32}
+      .box-text{font:400 16px Arial,Helvetica,sans-serif;fill:#31584D}
+      .out-title-dark{font:700 22px Arial,Helvetica,sans-serif;fill:#FFFFFF}
+      .out-text-dark{font:400 15px Arial,Helvetica,sans-serif;fill:#E8FFF0}
+      .out-title{font:700 22px Arial,Helvetica,sans-serif;fill:#123D32}
+      .out-text{font:400 15px Arial,Helvetica,sans-serif;fill:#31584D}
       .arrow{stroke:#2D6A4F;stroke-width:4;fill:none;marker-end:url(#arrow)}
+      .arrow-soft{stroke:#2D6A4F;stroke-width:3.3;fill:none;marker-end:url(#arrow);opacity:0.9}
     </style>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
-      <path d="M2,2 L10,6 L2,10 Z" fill="#2D6A4F"/>
+    <marker id="arrow" markerWidth="13" markerHeight="13" refX="11" refY="6.5" orient="auto">
+      <path d="M2,2 L11,6.5 L2,11 Z" fill="#2D6A4F"/>
     </marker>
   </defs>
 
-  <rect width="1500" height="930" rx="30" fill="url(#bg)"/>
-  <text x="70" y="80" class="title">LAB-Score v1.1 workflow</text>
-  <text x="70" y="115" class="subtitle">Safety-gated genomic prioritization framework for lactic acid bacteria candidates</text>
+  <rect width="1600" height="980" rx="32" fill="url(#bg)"/>
 
-  <!-- Input -->
-  <rect x="70" y="175" width="285" height="120" rx="24" fill="#E8F3FF" stroke="#2F80ED" stroke-width="3" filter="url(#shadow)"/>
-  <text x="100" y="220" class="box-title">1. Input data</text>
-  <text x="100" y="252" class="box-text">Genome assemblies</text>
-  <text x="100" y="276" class="box-text">or existing Prokka outputs</text>
+  <text x="75" y="80" class="title">LAB-Score v1.1 workflow</text>
+  <text x="75" y="118" class="subtitle">Safety-gated genomic prioritization framework for lactic acid bacteria candidates</text>
 
-  <!-- Metadata / annotation -->
-  <rect x="455" y="150" width="285" height="105" rx="24" fill="#F4F7FB" stroke="#5B6B7A" stroke-width="2.5" filter="url(#shadow)"/>
-  <text x="485" y="192" class="box-title">2. Metadata resolution</text>
-  <text x="485" y="224" class="box-text">Accession, genus, species, strain</text>
+  <!-- INPUT -->
+  <rect x="75" y="180" width="310" height="130" rx="24" fill="#E8F3FF" stroke="#2F80ED" stroke-width="3" filter="url(#shadow)"/>
+  <text x="105" y="226" class="box-title">1. Input data</text>
+  <text x="105" y="260" class="box-text">Genome assemblies</text>
+  <text x="105" y="285" class="box-text">or existing Prokka outputs</text>
 
-  <rect x="455" y="285" width="285" height="105" rx="24" fill="#F4F7FB" stroke="#5B6B7A" stroke-width="2.5" filter="url(#shadow)"/>
-  <text x="485" y="327" class="box-title">3. Annotation</text>
-  <text x="485" y="359" class="box-text">Prokka or imported annotations</text>
+  <!-- METADATA + ANNOTATION -->
+  <rect x="500" y="155" width="310" height="115" rx="24" fill="#F4F7FB" stroke="#5B6B7A" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="530" y="198" class="box-title">2. Metadata resolution</text>
+  <text x="530" y="232" class="box-text">Accession, genus, species, strain</text>
 
-  <!-- Modules -->
-  <rect x="845" y="115" width="265" height="96" rx="22" fill="#FFE8E8" stroke="#C1121F" stroke-width="3" filter="url(#shadow)"/>
-  <text x="875" y="153" class="box-title">Safety screening</text>
-  <text x="875" y="183" class="box-text">AMR, virulence, warning markers</text>
+  <rect x="500" y="315" width="310" height="115" rx="24" fill="#F4F7FB" stroke="#5B6B7A" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="530" y="358" class="box-title">3. Annotation</text>
+  <text x="530" y="392" class="box-text">Prokka or imported annotations</text>
 
-  <rect x="845" y="235" width="265" height="96" rx="22" fill="#E9FBEF" stroke="#2D6A4F" stroke-width="3" filter="url(#shadow)"/>
-  <text x="875" y="273" class="box-title">Functional panels</text>
-  <text x="875" y="303" class="box-text">GI, stress, EPS, GABA, vitamins</text>
+  <!-- FEATURE MODULES -->
+  <rect x="925" y="105" width="300" height="105" rx="22" fill="#FFE8E8" stroke="#C1121F" stroke-width="3" filter="url(#shadow)"/>
+  <text x="955" y="145" class="box-title">Safety screening</text>
+  <text x="955" y="177" class="box-text">AMR, virulence, warning markers</text>
 
-  <rect x="845" y="355" width="265" height="96" rx="22" fill="#FFF3D6" stroke="#E07C24" stroke-width="3" filter="url(#shadow)"/>
-  <text x="875" y="393" class="box-title">CAZyme profiling</text>
-  <text x="875" y="423" class="box-text">run_dbCAN, DIAMOND, HMMER</text>
+  <rect x="925" y="245" width="300" height="105" rx="22" fill="#E9FBEF" stroke="#2D6A4F" stroke-width="3" filter="url(#shadow)"/>
+  <text x="955" y="285" class="box-title">Functional panels</text>
+  <text x="955" y="317" class="box-text">GI, stress, EPS, GABA, vitamins</text>
 
-  <rect x="845" y="475" width="265" height="96" rx="22" fill="#EFE8FF" stroke="#6C63FF" stroke-width="3" filter="url(#shadow)"/>
-  <text x="875" y="513" class="box-title">Genome quality</text>
-  <text x="875" y="543" class="box-text">Assembly and quality metrics</text>
+  <rect x="925" y="385" width="300" height="105" rx="22" fill="#FFF3D6" stroke="#E07C24" stroke-width="3" filter="url(#shadow)"/>
+  <text x="955" y="425" class="box-title">CAZyme profiling</text>
+  <text x="955" y="457" class="box-text">run_dbCAN, DIAMOND, HMMER</text>
 
-  <!-- Matrix and score -->
-  <rect x="1200" y="245" width="245" height="105" rx="24" fill="#E6F4F1" stroke="#00796B" stroke-width="3" filter="url(#shadow)"/>
-  <text x="1230" y="288" class="box-title">Master matrix</text>
-  <text x="1230" y="320" class="box-text">Integrated genome features</text>
+  <rect x="925" y="525" width="300" height="105" rx="22" fill="#EFE8FF" stroke="#6C63FF" stroke-width="3" filter="url(#shadow)"/>
+  <text x="955" y="565" class="box-title">Genome quality</text>
+  <text x="955" y="597" class="box-text">Assembly and quality metrics</text>
 
-  <rect x="1200" y="410" width="245" height="115" rx="24" fill="#DDF6FF" stroke="#0096C7" stroke-width="3.5" filter="url(#shadow)"/>
-  <text x="1230" y="453" class="box-title">LAB-Score v1.1</text>
-  <text x="1230" y="485" class="box-text">Weighted score + safety gate</text>
+  <!-- MATRIX + SCORE -->
+  <rect x="1330" y="245" width="220" height="110" rx="24" fill="#E6F4F1" stroke="#00796B" stroke-width="3" filter="url(#shadow)"/>
+  <text x="1360" y="290" class="box-title">Master matrix</text>
+  <text x="1360" y="322" class="box-text">Integrated features</text>
 
-  <!-- Outputs -->
-  <rect x="80" y="665" width="245" height="100" rx="22" fill="#1B4332" stroke="#1B4332" stroke-width="2" filter="url(#shadow)"/>
-  <text x="110" y="705" class="box-title" fill="#FFFFFF">Elite / High</text>
-  <text x="110" y="735" class="small">Priority candidates</text>
+  <rect x="1330" y="430" width="220" height="120" rx="24" fill="#DDF6FF" stroke="#0096C7" stroke-width="3.5" filter="url(#shadow)"/>
+  <text x="1360" y="475" class="box-title">LAB-Score v1.1</text>
+  <text x="1360" y="507" class="box-text">Weighted score</text>
+  <text x="1360" y="532" class="box-text">+ safety gate</text>
 
-  <rect x="360" y="665" width="245" height="100" rx="22" fill="#52B788" stroke="#2D6A4F" stroke-width="2" filter="url(#shadow)"/>
-  <text x="390" y="705" class="box-title">Moderate / Low</text>
-  <text x="390" y="735" class="box-text">Lower-priority candidates</text>
+  <!-- OUTPUT SECTION LABEL -->
+  <text x="75" y="690" class="subtitle">Safety-gated outputs</text>
 
-  <rect x="640" y="665" width="245" height="100" rx="22" fill="#F4A261" stroke="#E76F51" stroke-width="2" filter="url(#shadow)"/>
-  <text x="670" y="705" class="box-title">Cautionary</text>
-  <text x="670" y="735" class="box-text">Safety review required</text>
+  <!-- OUTPUT CARDS - bigger, readable -->
+  <rect x="75" y="725" width="260" height="120" rx="22" fill="#1B4332" stroke="#1B4332" stroke-width="2" filter="url(#shadow)"/>
+  <text x="105" y="775" class="out-title-dark">Elite / High</text>
+  <text x="105" y="812" class="out-text-dark">Priority candidates</text>
 
-  <rect x="920" y="665" width="245" height="100" rx="22" fill="#C1121F" stroke="#780000" stroke-width="2" filter="url(#shadow)"/>
-  <text x="950" y="705" class="box-title" fill="#FFFFFF">Critical review</text>
-  <text x="950" y="735" class="small">Critical safety markers</text>
+  <rect x="370" y="725" width="260" height="120" rx="22" fill="#52B788" stroke="#2D6A4F" stroke-width="2" filter="url(#shadow)"/>
+  <text x="400" y="775" class="out-title">Moderate / Low</text>
+  <text x="400" y="812" class="out-text">Lower-priority candidates</text>
 
-  <rect x="1200" y="625" width="245" height="175" rx="24" fill="#EAF8FF" stroke="#00A6FB" stroke-width="3" filter="url(#shadow)"/>
-  <text x="1230" y="670" class="box-title">Interactive report</text>
-  <text x="1230" y="704" class="box-text">Radar comparison</text>
-  <text x="1230" y="730" class="box-text">Strain details</text>
-  <text x="1230" y="756" class="box-text">TSV / JSON / HTML export</text>
+  <rect x="665" y="725" width="260" height="120" rx="22" fill="#F4A261" stroke="#E76F51" stroke-width="2" filter="url(#shadow)"/>
+  <text x="695" y="775" class="out-title">Cautionary</text>
+  <text x="695" y="812" class="out-text">Safety review required</text>
 
-  <!-- Arrows -->
-  <path d="M355,235 C390,235 415,205 455,205" class="arrow"/>
-  <path d="M355,235 C400,235 410,338 455,338" class="arrow"/>
-  <path d="M740,338 C800,338 790,163 845,163" class="arrow"/>
-  <path d="M740,338 C800,338 790,283 845,283" class="arrow"/>
-  <path d="M740,338 C800,338 790,403 845,403" class="arrow"/>
-  <path d="M740,338 C800,338 790,523 845,523" class="arrow"/>
-  <path d="M1110,163 C1160,163 1165,300 1200,300" class="arrow"/>
-  <path d="M1110,283 C1160,283 1165,300 1200,300" class="arrow"/>
-  <path d="M1110,403 C1160,403 1165,300 1200,300" class="arrow"/>
-  <path d="M1110,523 C1160,523 1165,300 1200,300" class="arrow"/>
-  <path d="M1322,350 L1322,410" class="arrow"/>
-  <path d="M1322,525 C1260,595 1120,615 1042,665" class="arrow"/>
-  <path d="M1322,525 C1180,625 860,605 762,665" class="arrow"/>
-  <path d="M1322,525 C1080,640 570,610 482,665" class="arrow"/>
-  <path d="M1322,525 C965,660 250,610 202,665" class="arrow"/>
-  <path d="M1322,525 L1322,625" class="arrow"/>
+  <rect x="960" y="725" width="260" height="120" rx="22" fill="#C1121F" stroke="#780000" stroke-width="2" filter="url(#shadow)"/>
+  <text x="990" y="775" class="out-title-dark">Critical review</text>
+  <text x="990" y="812" class="out-text-dark">Critical safety markers</text>
 
-  <text x="70" y="870" class="subtitle">Designed for transparent, reproducible, and exportable strain-level interpretation before phenotypic validation.</text>
+  <rect x="1290" y="700" width="260" height="165" rx="24" fill="#EAF8FF" stroke="#00A6FB" stroke-width="3" filter="url(#shadow)"/>
+  <text x="1320" y="745" class="box-title">Interactive report</text>
+  <text x="1320" y="782" class="box-text">Radar comparison</text>
+  <text x="1320" y="807" class="box-text">Strain details</text>
+  <text x="1320" y="832" class="box-text">TSV / JSON / HTML export</text>
+
+  <!-- ARROWS -->
+  <path d="M385,245 C425,245 450,212 500,212" class="arrow"/>
+  <path d="M385,245 C430,245 450,372 500,372" class="arrow"/>
+
+  <path d="M810,372 C875,372 865,158 925,158" class="arrow"/>
+  <path d="M810,372 C875,372 865,298 925,298" class="arrow"/>
+  <path d="M810,372 C875,372 865,438 925,438" class="arrow"/>
+  <path d="M810,372 C875,372 865,578 925,578" class="arrow"/>
+
+  <path d="M1225,158 C1280,158 1285,300 1330,300" class="arrow"/>
+  <path d="M1225,298 C1280,298 1285,300 1330,300" class="arrow"/>
+  <path d="M1225,438 C1280,438 1285,300 1330,300" class="arrow"/>
+  <path d="M1225,578 C1280,578 1285,300 1330,300" class="arrow"/>
+  <path d="M1440,355 L1440,430" class="arrow"/>
+
+  <!-- route output arrows to card TOPS, not across text -->
+  <path d="M1440,550 C1260,650 1120,680 1090,725" class="arrow-soft"/>
+  <path d="M1440,550 C1180,670 830,675 795,725" class="arrow-soft"/>
+  <path d="M1440,550 C1070,690 530,675 500,725" class="arrow-soft"/>
+  <path d="M1440,550 C960,705 220,675 205,725" class="arrow-soft"/>
+  <path d="M1440,550 C1440,610 1420,650 1420,700" class="arrow-soft"/>
+
+  <text x="75" y="925" class="subtitle">Designed for transparent, reproducible, and exportable strain-level interpretation before phenotypic validation.</text>
 </svg>
