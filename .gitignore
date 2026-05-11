@@ -1,0 +1,44 @@
+# Large input/output folders
+genomes/
+downloads/
+results/
+results_*/
+annotations_prokka_GCA/
+db/
+databases/
+
+# Logs
+logs/
+*.log
+
+# Python/cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Conda/env
+.env
+.conda/
+venv/
+env/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large bioinformatics files
+*.fna
+*.faa
+*.ffn
+*.gbk
+*.gff
+*.sam
+*.bam
+*.bai
+*.fastq
+*.fq
+*.gz
+*.tar
+*.zip

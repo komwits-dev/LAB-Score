@@ -1,61 +1,87 @@
 # LAB-Score
 
-**LAB-Score** is a safety-gated genomic prioritization framework for lactic acid bacteria (LAB).  
-It integrates genome annotation, antimicrobial resistance and safety-marker screening, functional trait detection, CAZyme profiling, LAB-Score calculation, machine-learning interpretation, and an interactive radar-based strain comparison report.
+<p align="center">
+  <img src="docs/images/lab_score_workflow.svg" alt="LAB-Score workflow" width="100%">
+</p>
+
+<p align="center">
+  <b>A safety-gated genomic prioritization framework for lactic acid bacteria candidates</b>
+</p>
+
+<p align="center">
+  <img alt="Version" src="https://img.shields.io/badge/version-v3.5-2D6A4F">
+  <img alt="Score" src="https://img.shields.io/badge/scoring-LAB--Score%20v1.1-0096C7">
+  <img alt="Python" src="https://img.shields.io/badge/python-3.10-blue">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-green">
+</p>
+
+---
+
+## Overview
+
+**LAB-Score** is a genome-based framework for prioritizing lactic acid bacteria (LAB) candidates for probiotic, fermentation, and functional-food applications.
+
+The pipeline integrates:
+
+- genome annotation or existing Prokka annotation import;
+- metadata and species resolution;
+- safety screening;
+- antimicrobial resistance and virulence marker detection;
+- functional trait panel scanning;
+- dbCAN-based CAZyme profiling;
+- genome quality integration;
+- LAB-Score v1.1 calculation;
+- machine-learning interpretation;
+- interactive radar-based strain comparison and exportable reports.
 
 > **Pipeline version:** v3.5  
 > **Scoring model:** LAB-Score v1.1  
-> **Main use:** genome-based prioritization of LAB candidates for downstream experimental validation.
+> **Recommended use:** candidate prioritization before experimental validation.
 
 ---
 
 ## Key features
 
-- Accepts **genome assemblies** or **existing Prokka annotation folders**
-- Supports nested Prokka folders, including species/accession-level directory structures
-- Performs safety-gated candidate prioritization
-- Screens functional trait panels relevant to probiotic, fermentation, and functional-food applications
-- Integrates dbCAN-based CAZyme annotation
-- Generates LAB-Score v1.1 candidate tiers
-- Provides machine-learning feature interpretation
-- Builds publication-ready figures and summary tables
-- Includes an interactive HTML report with radar-based strain comparison
-- Allows export of selected strain information as tables, figures, JSON files, and HTML reports
+- Accepts **raw genome assemblies** or **existing Prokka annotation folders**
+- Supports nested Prokka layouts such as `species/accession/*.gff`
+- Performs safety-gated LAB candidate classification
+- Screens functional modules relevant to LAB applications
+- Integrates dbCAN CAZyme annotation
+- Produces genome-level and species-level score summaries
+- Generates publication-ready figures and tables
+- Includes an interactive HTML report
+- Supports radar-based strain comparison
+- Exports selected strain information as TSV, JSON, PNG, SVG, and HTML reports
 
 ---
 
-## Workflow
+## Interactive report preview
 
-```mermaid
-flowchart TD
-    A["Input genomes or existing Prokka results"] --> B["Metadata resolution"]
-    A --> C["Genome annotation or imported Prokka"]
+LAB-Score v3.5 generates an interactive HTML report for exploring large-scale LAB genome prioritization results.
 
-    C --> D["Safety screening"]
-    C --> E["Functional trait detection"]
-    C --> F["CAZyme profiling with dbCAN"]
-    C --> G["Genome quality assessment"]
+### Overview dashboard
 
-    B --> H["Master feature matrix"]
-    D --> H
-    E --> H
-    F --> H
-    G --> H
+The overview dashboard summarizes the number of analyzed genomes, candidate-tier distribution, LAB-Score distribution, safety-gated classes, and top species.
 
-    H --> I["LAB-Score v1.1 calculation"]
-    I --> J["Safety-gated candidate tier assignment"]
-    I --> K["Machine-learning interpretation"]
-    I --> L["Interactive radar-based report"]
+![LAB-Score overview dashboard](docs/images/overview_dashboard.png)
 
-    J --> M["Elite candidate"]
-    J --> N["High candidate"]
-    J --> O["Moderate candidate"]
-    J --> P["Low priority"]
-    J --> Q["Cautionary candidate"]
-    J --> R["Critical safety review"]
-```
+### Strain-level report and export panel
 
-LAB-Score accepts genome assemblies or existing Prokka annotations and integrates metadata resolution, safety screening, functional trait detection, CAZyme profiling, genome quality assessment, LAB-Score calculation, machine-learning interpretation, and interactive radar-based reporting.
+Users can click any strain to view a detailed report containing LAB-Score breakdown, safety analysis, species identification, genome quality, CAZyme profile, and functional trait information. Each strain report can be exported as TSV, JSON, radar figure, or HTML report.
+
+![LAB-Score strain detail modal](docs/images/strain_detail_modal.png)
+
+### Radar-based strain comparison
+
+The Radar Compare tab allows users to search, filter, and select strains for side-by-side comparison across functional modules. Selected strains can be exported as figures, comparison tables, or strain-level reports.
+
+![LAB-Score radar comparison](docs/images/radar_compare.png)
+
+### Gene presence / abundance heatmap
+
+The Gene Presence tab provides an interactive heatmap for comparing functional panel abundance across selected genomes or species.
+
+![LAB-Score gene presence heatmap](docs/images/gene_presence_heatmap.png)
 
 ---
 
@@ -63,19 +89,14 @@ LAB-Score accepts genome assemblies or existing Prokka annotations and integrate
 
 LAB-Score uses a **safety-gated strategy**. Genomes with favorable functional profiles are prioritized only after safety screening. Genomes with cautionary or critical safety markers are separated into cautionary or critical-review categories rather than being ranked solely by functional potential.
 
-```mermaid
-flowchart LR
-    A["Genome features"] --> B["Benefit score<br/>GI survival + functional traits + CAZymes"]
-    A --> C["Safety screen<br/>AMR / virulence / warning markers"]
-
-    B --> D["Preliminary LAB-Score"]
-    C --> E{"Safety gate"}
-    D --> E
-
-    E --> F["Elite / High / Moderate / Low candidate"]
-    E --> G["Cautionary candidate"]
-    E --> H["Critical safety review"]
-```
+| Tier | Interpretation |
+|---|---|
+| Elite candidate | Strong predicted profile with no major safety marker detected |
+| High candidate | Favorable predicted profile suitable for further validation |
+| Moderate candidate | Intermediate predicted profile |
+| Low priority | Limited predicted benefit or incomplete feature support |
+| Cautionary candidate | Functional potential present, but cautionary safety review required |
+| Critical safety review | Critical safety markers detected; not recommended without detailed review |
 
 ---
 
@@ -87,8 +108,17 @@ LAB-Score/
 ├── QUICK_START.md
 ├── QUICK_START_RADAR.md
 ├── VERSION.txt
+├── LICENSE
+├── .gitignore
 ├── install.sh
 ├── run_all.sh
+├── docs/
+│   └── images/
+│       ├── lab_score_workflow.svg
+│       ├── overview_dashboard.png
+│       ├── strain_detail_modal.png
+│       ├── radar_compare.png
+│       └── gene_presence_heatmap.png
 └── scripts/
     ├── 00_prepare_prokka_input.sh
     ├── 00_resolve_metadata.py
@@ -109,26 +139,37 @@ LAB-Score/
 
 ---
 
-## Installation
+## What does `install.sh` do?
 
-LAB-Score v3.5 uses two conda environments:
+The `install.sh` script prepares the software environment required to run LAB-Score. It was designed to avoid common dependency conflicts in bioinformatics workflows by separating the main LAB-Score environment from the dbCAN environment.
 
-```text
-lab_score_clean  = main LAB-Score pipeline, Prokka, AMRFinderPlus, scoring, figures
-dbcan_clean      = run_dbCAN/dbCAN only
-```
+### Environment design
 
-Run:
+LAB-Score uses two conda environments:
 
-```bash
-bash install.sh \
-  --env-name lab_score_clean \
-  --dbcan-env-name dbcan_clean \
-  --dbcan-db-dir /path/to/dbcan_database \
-  --skip-optional
-```
+| Environment | Purpose |
+|---|---|
+| `lab_score_clean` | Main LAB-Score workflow, Prokka, AMRFinderPlus, scoring, figures, and interactive report |
+| `dbcan_clean` | Dedicated environment for run_dbCAN, DIAMOND, HMMER, Prodigal, and CAZyme annotation |
 
-Example:
+This separation is important because run_dbCAN can create Python dependency conflicts when installed together with other bioinformatics tools.
+
+### Main functions of `install.sh`
+
+`install.sh` performs the following steps:
+
+1. Checks whether conda is available.
+2. Creates the main LAB-Score conda environment.
+3. Creates a separate dbCAN conda environment.
+4. Installs core Python packages such as `pandas`, `numpy`, `scikit-learn`, and `matplotlib`.
+5. Installs Prokka and required Perl dependencies.
+6. Installs AMRFinderPlus and updates the AMRFinderPlus database.
+7. Installs FastANI for optional species verification.
+8. Installs run_dbCAN, DIAMOND, HMMER, Prodigal, and supporting dbCAN dependencies.
+9. Downloads or checks the dbCAN database.
+10. Performs a final prerequisite check.
+
+### Recommended installation command
 
 ```bash
 bash install.sh \
@@ -138,7 +179,7 @@ bash install.sh \
   --skip-optional
 ```
 
-Check installation:
+### Check installation only
 
 ```bash
 bash run_all.sh \
@@ -146,6 +187,32 @@ bash run_all.sh \
   --env lab_score_clean \
   --dbcan-env-name dbcan_clean \
   --dbcan-db-dir /media/mecob/komwit/db/dbcan
+```
+
+### Useful installation options
+
+| Option | Meaning |
+|---|---|
+| `--env-name` | Name of the main LAB-Score conda environment |
+| `--dbcan-env-name` | Name of the separate dbCAN conda environment |
+| `--dbcan-db-dir` | Directory for the dbCAN database |
+| `--skip-optional` | Skip optional tools such as CheckM, ResFinder, or SHAP |
+| `--skip-dbcan-db` | Do not download the dbCAN database |
+| `--recreate-env` | Delete and recreate the main LAB-Score environment |
+| `--recreate-dbcan-env` | Delete and recreate the dbCAN environment |
+| `--check` | Check prerequisites only without installing |
+
+### When should I use `--recreate-dbcan-env`?
+
+Use this option if run_dbCAN is broken or if the system accidentally uses an old run_dbCAN from another conda environment.
+
+```bash
+bash install.sh \
+  --env-name lab_score_clean \
+  --dbcan-env-name dbcan_clean \
+  --dbcan-db-dir /media/mecob/komwit/db/dbcan \
+  --recreate-dbcan-env \
+  --skip-optional
 ```
 
 ---
@@ -207,19 +274,6 @@ annotations_prokka_GCA/
 
 ## Interactive radar report
 
-LAB-Score v3.5 includes an interactive report for strain-level interpretation.
-
-Main functions:
-
-- Search strains by genome ID, accession, species, strain name, tier, or safety status
-- Filter by candidate tier and safety status
-- Select multiple strains for radar-based comparison
-- View detailed information for any selected strain
-- Export selected strain tables
-- Export single-strain information as TSV or JSON
-- Export radar plots as PNG or SVG
-- Export selected-strain or single-strain HTML reports
-
 Generate only the interactive report:
 
 ```bash
@@ -238,21 +292,6 @@ results_from_existing_prokka/12_report/LAB_score_report.html
 
 ---
 
-## Candidate tiers
-
-LAB-Score v1.1 assigns genomes into refined safety-gated tiers:
-
-| Tier | Interpretation |
-|---|---|
-| Elite candidate | Strong predicted profile with no major safety marker detected |
-| High candidate | Favorable predicted profile suitable for further validation |
-| Moderate candidate | Intermediate predicted profile |
-| Low priority | Limited predicted benefit or incomplete feature support |
-| Cautionary candidate | Functional potential present, but cautionary safety review required |
-| Critical safety review | Critical safety markers detected; not recommended without detailed review |
-
----
-
 ## Important interpretation note
 
 LAB-Score is a **genome-based prioritization framework**, not a replacement for phenotypic validation.
@@ -263,7 +302,7 @@ Candidate genomes assigned to elite or high tiers represent strains with favorab
 
 ## Recommended data policy
 
-Do not upload large genome datasets, Prokka outputs, dbCAN databases, AMRFinderPlus databases, or private metadata to this repository.
+Do **not** upload large genome datasets, Prokka outputs, dbCAN databases, AMRFinderPlus databases, or private metadata to this repository.
 
 Recommended GitHub contents:
 

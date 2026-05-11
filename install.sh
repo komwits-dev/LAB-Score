@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# LAB-Score Pipeline v3.3 — prerequisite installer/checker
+# LAB-Score Pipeline v3.5 — prerequisite installer/checker
 # =============================================================================
 # Safer installer: keeps dbCAN in a separate clean conda environment to avoid
 # mixed pip/conda collisions such as numba ClobberError in the main environment.
@@ -31,7 +31,7 @@ RECREATE_DBCAN_ENV=false
 
 usage() {
   cat <<EOF
-LAB-Score Pipeline v3.3 installer
+LAB-Score Pipeline v3.5 installer
 
 Options:
   --check                       Check tools/databases only; do not install
@@ -68,7 +68,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-header "LAB-Score v3.3 prerequisite setup"
+header "LAB-Score v3.5 prerequisite setup"
 
 if ! command -v conda >/dev/null 2>&1; then
   fail "Conda was not found. Please install Miniconda/Anaconda first."
