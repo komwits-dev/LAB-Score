@@ -1,0 +1,8 @@
+LAB-Score pipeline v3.5
+- Improved interactive Radar Compare tab.
+- Search/filter/select any strain for radar comparison.
+- Click selected strain or radar trace to open full strain details.
+- Export radar figures as PNG/SVG.
+- Export selected strain comparison table as TSV.
+- Export single-strain or selected-strain HTML reports.
+- Fixed interactive report template rendering placeholders/braces.
