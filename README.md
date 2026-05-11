@@ -7,43 +7,6 @@ See `QUICK_START.md` for recommended commands.
 
 End-to-end pipeline: genome FASTA → species metadata → annotation → safety screening → functional panels → LAB-Score v1.1 → ML interpretation → publication figures.
 
-
-
-The easiest fix: **delete your current Workflow section** and replace it with this exact block.
-
-Paste this into `README.md`:
-
-````markdown
-## Workflow
-
-```mermaid
-flowchart TD
-    A["Input genomes or existing Prokka results"] --> B["Metadata resolution"]
-    A --> C["Genome annotation or imported Prokka"]
-
-    C --> D["Safety screening"]
-    C --> E["Functional trait detection"]
-    C --> F["CAZyme profiling with dbCAN"]
-    C --> G["Genome quality assessment"]
-
-    B --> H["Master feature matrix"]
-    D --> H
-    E --> H
-    F --> H
-    G --> H
-
-    H --> I["LAB-Score v1.1 calculation"]
-    I --> J["Safety-gated candidate tier assignment"]
-    I --> K["Machine-learning interpretation"]
-    I --> L["Interactive radar-based report"]
-
-    J --> M["Elite candidate"]
-    J --> N["High candidate"]
-    J --> O["Moderate candidate"]
-    J --> P["Low priority"]
-    J --> Q["Cautionary candidate"]
-    J --> R["Critical safety review"]
-
 ---
 
 ## Pipeline overview
