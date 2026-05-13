@@ -380,30 +380,6 @@ Candidate genomes assigned to elite or high tiers represent strains with favorab
 
 ---
 
-## Recommended data policy
-
-Do **not** upload large genome datasets, Prokka outputs, dbCAN databases, AMRFinderPlus databases, or private metadata to this repository.
-
-Recommended GitHub contents:
-
-```text
-Code
-Small examples
-Documentation
-Workflow description
-Version information
-```
-
-Recommended external deposition for large files:
-
-```text
-Zenodo
-Figshare
-NCBI SRA/Assembly
-Supplementary tables
-```
-
----
 
 ## Citation
 
