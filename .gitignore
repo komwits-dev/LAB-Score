@@ -1,44 +1,53 @@
-# Large input/output folders
-genomes/
-downloads/
-results/
-results_*/
-annotations_prokka_GCA/
-db/
-databases/
-
-# Logs
-logs/
-*.log
-
-# Python/cache
+# Python
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
+*.pyo
+*.pyd
+.Python
+*.egg-info/
 
 # Conda/env
 .env
-.conda/
-venv/
+.venv
 env/
+venv/
+
+# Logs
+*.log
+*.tmp
+
+# Large pipeline outputs
+results/
+results_from_existing_prokka/
+*/01_genomes/
+*/02_annotations/
+*/03_prokka/
+*/04_safety/
+*/05_dbcan/
+*/09_scores/
+*/10_ml/
+*/11_figures/
+*/12_ml_functional_only/
+*/13_sensitivity/
+*/14_baselines/
+*/15_release/
+*/16_html_report/
+
+# Large genomic files
+*.fna
+*.fa
+*.fasta
+*.faa
+*.ffn
+*.gbk
+*.gff
+*.gz
+*.zip
+*.tar
+*.tar.gz
 
 # OS/editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-
-# Large bioinformatics files
-*.fna
-*.faa
-*.ffn
-*.gbk
-*.gff
-*.sam
-*.bam
-*.bai
-*.fastq
-*.fq
-*.gz
-*.tar
-*.zip
