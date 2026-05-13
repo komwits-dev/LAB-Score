@@ -421,7 +421,7 @@ This project is released under the MIT License.
 
 ---
 
-## Running manuscript robustness/report modules only
+## Running robustness/report modules only
 
 If you already have `LAB_score_v1.tsv`, you can run only the new robustness and report modules:
 
