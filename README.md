@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-v3.5-2D6A4F">
+  <img alt="Version" src="https://img.shields.io/badge/version-v3.6-2D6A4F">
   <img alt="Score" src="https://img.shields.io/badge/scoring-LAB--Score%20v1.1-0096C7">
   <img alt="Python" src="https://img.shields.io/badge/python-3.10-blue">
   <img alt="License" src="https://img.shields.io/badge/license-MIT-green">
@@ -32,9 +32,11 @@ The pipeline integrates:
 - genome quality integration;
 - LAB-Score v1.1 calculation;
 - machine-learning interpretation;
-- interactive radar-based strain comparison and exportable reports.
+- interactive radar-based strain comparison and exportable reports;
+- weight sensitivity analysis and baseline comparison;
+- manuscript-style tabbed HTML summary report.
 
-> **Pipeline version:** v3.5  
+> **Pipeline version:** v3.6  
 > **Scoring model:** LAB-Score v1.1  
 > **Recommended use:** candidate prioritization before experimental validation.
 
@@ -52,12 +54,14 @@ The pipeline integrates:
 - Includes an interactive HTML report
 - Supports radar-based strain comparison
 - Exports selected strain information as TSV, JSON, PNG, SVG, and HTML reports
+- Includes weight sensitivity analysis and baseline ranking comparison
+- Generates a manuscript-style tabbed HTML summary report
 
 ---
 
 ## Interactive report preview
 
-LAB-Score v3.5 generates an interactive HTML report for exploring large-scale LAB genome prioritization results.
+LAB-Score v3.6 generates an interactive HTML report for exploring large-scale LAB genome prioritization results.
 
 ### Overview dashboard
 
@@ -85,18 +89,67 @@ The Gene Presence tab provides an interactive heatmap for comparing functional p
 
 ---
 
-## Candidate-tier logic
+## LAB-Score v1.1 refined safety-gated logic
 
-LAB-Score uses a **safety-gated strategy**. Genomes with favorable functional profiles are prioritized only after safety screening. Genomes with cautionary or critical safety markers are separated into cautionary or critical-review categories rather than being ranked solely by functional potential.
+LAB-Score uses a **refined safety-gated strategy**. Genomes with favorable functional profiles are prioritized only after safety screening, while genomes with cautionary or critical markers are retained but clearly separated for downstream interpretation.
 
-| Tier | Interpretation |
+### Refined safety status
+
+| Safety status | Definition |
 |---|---|
-| Elite candidate | Strong predicted profile with no major safety marker detected |
-| High candidate | Favorable predicted profile suitable for further validation |
-| Moderate candidate | Intermediate predicted profile |
-| Low priority | Limited predicted benefit or incomplete feature support |
-| Cautionary candidate | Functional potential present, but cautionary safety review required |
-| Critical safety review | Critical safety markers detected; not recommended without detailed review |
+| No safety marker detected / Pass | No AMR, virulence, hemolysin-associated, or biogenic amine-associated marker detected |
+| Cautionary safety review / Caution | Putative hemolysin-associated or biogenic amine-associated marker detected |
+| Critical safety review / Critical | AMR gene or virulence-associated marker detected |
+
+### Candidate-tier thresholds
+
+| LAB-Score range | Tier |
+|---|---|
+| ≥85 | Elite candidate |
+| 70–84.9 | High candidate |
+| 50–69.9 | Moderate candidate |
+| <50 | Low priority |
+
+If a genome has cautionary markers, the score-based tier receives a cautionary prefix, for example `Cautionary High candidate`. Genomes with AMR or virulence-associated markers are assigned to `Critical safety review`, regardless of the score.
+
+> LAB-Score is a genome-based decision-support framework for candidate prioritization. It does not replace phenotypic safety testing or experimental probiotic/fermentation validation.
+
+---
+
+## Manuscript v1.1 release outputs
+
+The current release adds manuscript-scale robustness and reporting modules for LAB-Score v1.1.
+
+| Output | Description |
+|---|---|
+| `09_scores/LAB_score_v1.tsv` | Genome-level LAB-Score results |
+| `09_scores/top100_candidates.tsv` | Top 100 non-critical candidate genomes |
+| `09_scores/species_mean_scores.tsv` | Species-level LAB-Score summary |
+| `10_ml/model_performance_summary.tsv` | Random Forest model performance |
+| `10_ml/RF_classification_functional_feature_importance.tsv` | Functional-module feature importance |
+| `13_sensitivity/weight_sensitivity_summary.tsv` | Robustness across alternative scoring weights |
+| `14_baselines/baseline_comparison_summary.tsv` | Comparison with simplified baseline rankings |
+| `15_release/LAB_SCORE_v1_1_release_manifest.tsv` | File manifest for reproducibility |
+| `16_html_report/LAB_SCORE_v1_1_summary_report.html` | Tabbed manuscript-style HTML summary report |
+
+### Manuscript figures
+
+The `docs/manuscript/figures/` folder contains manuscript-ready figure drafts:
+
+| Figure | Description |
+|---|---|
+| Figure 1 | LAB-Score workflow |
+| Figure 2 | LAB-Score distribution with thresholds |
+| Figure 3 | Refined safety-gated candidate tier distribution |
+| Figure 4 | Composition of LAB-Score v1.1 candidate tiers |
+| Figure 5 | Functional modules driving LAB-Score candidate prioritization |
+
+### Robustness analyses
+
+The v3.6 release adds two robustness analyses:
+
+1. **Weight sensitivity analysis** — compares the main safety-heavy LAB-Score v1.1 formula with equal, function-heavy, GI-survival-heavy, and fermentation-heavy weighting schemes.
+2. **Baseline comparison** — compares integrated LAB-Score rankings against safety-only, GI-only, functional-only, fermentation-only, function-plus-fermentation, and no-safety baseline rankings.
 
 ---
 
@@ -107,6 +160,7 @@ LAB-Score/
 ├── README.md
 ├── QUICK_START.md
 ├── QUICK_START_RADAR.md
+├── QUICK_START_MANUSCRIPT.md
 ├── VERSION.txt
 ├── LICENSE
 ├── .gitignore
@@ -134,7 +188,11 @@ LAB-Score/
     ├── 09_calculate_lab_score.py
     ├── 10_ml_interpret.py
     ├── 11_make_figures.py
-    └── 12_interactive_report.py
+    ├── 12_interactive_report.py
+    ├── 13_weight_sensitivity_analysis.py
+    ├── 14_baseline_comparison.py
+    ├── 15_make_release_manifest.py
+    └── 16_make_html_summary_report.py
 ```
 
 ---
@@ -360,3 +418,33 @@ LAB-Score: a safety-gated genomic framework for prioritizing lactic acid bacteri
 ## License
 
 This project is released under the MIT License.
+
+---
+
+## Running manuscript robustness/report modules only
+
+If you already have `LAB_score_v1.tsv`, you can run only the new robustness and report modules:
+
+```bash
+python scripts/13_weight_sensitivity_analysis.py \
+  --scores lab_score_out/09_scores/LAB_score_v1.tsv \
+  --outdir lab_score_out/13_sensitivity
+
+python scripts/14_baseline_comparison.py \
+  --scores lab_score_out/09_scores/LAB_score_v1.tsv \
+  --outdir lab_score_out/14_baselines
+
+python scripts/15_make_release_manifest.py \
+  --pipeline-outdir lab_score_out \
+  --outdir lab_score_out/15_release
+
+python scripts/16_make_html_summary_report.py \
+  --pipeline-outdir lab_score_out \
+  --outdir lab_score_out/16_html_report
+```
+
+Open the summary report:
+
+```bash
+xdg-open lab_score_out/16_html_report/LAB_SCORE_v1_1_summary_report.html
+```

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# LAB-Score Pipeline v3.3
+# LAB-Score Pipeline v3.6
 # run_all.sh — Full pipeline from FASTA and/or existing/nested Prokka results
 #              to LAB-Score + ML interpretation + publication-ready figures.
 #
@@ -143,7 +143,7 @@ fi
 
 if [[ "$AUTO_INSTALL" == true ]]; then
   echo "======================================================================"
-  echo "  LAB-Score Pipeline v3.3 prerequisite setup"
+  echo "  LAB-Score Pipeline v3.6 prerequisite setup"
   echo "======================================================================"
   bash "$SCRIPT_DIR/install.sh" "${INSTALL_ARGS[@]}"
 else
@@ -190,7 +190,7 @@ LOG="$OUTDIR/logs/pipeline_$(date +%Y%m%d_%H%M%S).log"
 exec > >(tee -a "$LOG") 2>&1
 
 echo "======================================================================"
-echo "  LAB-Score Pipeline v3.3"
+echo "  LAB-Score Pipeline v3.6"
 echo "  $(date)"
 echo "======================================================================"
 echo "  Genome input:     ${INDIR:-none}"
@@ -355,6 +355,34 @@ python "$SCRIPT_DIR/scripts/12_interactive_report.py" \
   --outdir   "$OUTDIR/12_report"
 echo "[Step 12] Done."
 
+
+echo ""
+echo "[Step 13] Running LAB-Score weight sensitivity analysis..."
+python "$SCRIPT_DIR/scripts/13_weight_sensitivity_analysis.py" \
+  --scores "$OUTDIR/09_scores/LAB_score_v1.tsv" \
+  --outdir "$OUTDIR/13_sensitivity"
+echo "[Step 13] Done."
+
+echo ""
+echo "[Step 14] Running baseline comparison..."
+python "$SCRIPT_DIR/scripts/14_baseline_comparison.py" \
+  --scores "$OUTDIR/09_scores/LAB_score_v1.tsv" \
+  --outdir "$OUTDIR/14_baselines"
+echo "[Step 14] Done."
+
+echo ""
+echo "[Step 15] Creating release manifest..."
+python "$SCRIPT_DIR/scripts/15_make_release_manifest.py" \
+  --pipeline-outdir "$OUTDIR" \
+  --outdir "$OUTDIR/15_release"
+echo "[Step 15] Done."
+
+echo ""
+echo "[Step 16] Generating manuscript-style HTML summary report..."
+python "$SCRIPT_DIR/scripts/16_make_html_summary_report.py" \
+  --pipeline-outdir "$OUTDIR" \
+  --outdir "$OUTDIR/16_html_report"
+echo "[Step 16] Done."
 
 echo ""
 echo "======================================================================"

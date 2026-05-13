@@ -1,8 +1,11 @@
-LAB-Score pipeline v3.5
-- Improved interactive Radar Compare tab.
-- Search/filter/select any strain for radar comparison.
-- Click selected strain or radar trace to open full strain details.
-- Export radar figures as PNG/SVG.
-- Export selected strain comparison table as TSV.
-- Export single-strain or selected-strain HTML reports.
-- Fixed interactive report template rendering placeholders/braces.
+LAB-Score pipeline v3.6
+Scoring model: LAB-Score v1.1
+Release type: manuscript-ready framework release
+
+Updates in v3.6:
+- Added weight sensitivity analysis for alternative LAB-Score component weights.
+- Added baseline comparison against safety-only, GI-only, functional-only, fermentation-only, function-plus-fermentation, and no-safety rankings.
+- Added release manifest generation for reproducible result packages.
+- Added manuscript-style tabbed HTML summary report with overview, candidate tiers, top candidates, species summary, ML interpretation, sensitivity analysis, baseline comparison, and output files.
+- Added manuscript-ready figure/table drafts under docs/manuscript/.
+- Updated run_all.sh to execute sensitivity, baseline, manifest, and HTML summary report steps after standard scoring/ML/figures/report generation.
