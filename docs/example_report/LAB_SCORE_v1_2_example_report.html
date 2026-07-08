@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAB-Score v1.2 Summary Report</title>
+<style>
+:root {
+  --navy:#10375c; --blue:#2274a5; --teal:#1b998b; --orange:#d97706;
+  --red:#b42318; --bg:#f4f7fb; --card:#ffffff; --text:#1f2933;
+  --muted:#64748b; --border:#d9e2ec;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+header { padding:32px 40px; color:white; background:linear-gradient(135deg,var(--navy),var(--blue),var(--teal)); }
+header h1 { margin:0; font-size:34px; }
+header p { margin:8px 0 0; font-size:16px; }
+main { padding:24px 36px 48px; }
+.cards { display:grid; grid-template-columns:repeat(6,minmax(150px,1fr)); gap:14px; margin-bottom:22px; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 2px 7px rgba(0,0,0,.05); }
+.label { color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+.value { margin-top:8px; color:var(--navy); font-size:28px; font-weight:800; }
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+.tabbtn { border:1px solid var(--border); background:white; color:var(--navy); padding:11px 15px; border-radius:999px; font-weight:700; cursor:pointer; }
+.tabbtn.active { background:var(--navy); color:white; }
+.tab { display:none; background:white; border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:0 2px 7px rgba(0,0,0,.05); }
+.tab.active { display:block; }
+h2,h3 { color:var(--navy); }
+h2 { margin-top:0; }
+.note { background:#eef7ff; border-left:5px solid var(--blue); padding:13px 16px; border-radius:10px; margin:14px 0 20px; }
+.warning { background:#fff7e6; border-left:5px solid var(--orange); padding:13px 16px; border-radius:10px; margin:14px 0 20px; }
+.warn,.missing { color:var(--red); font-weight:700; }
+.figgrid { display:grid; grid-template-columns:repeat(2,minmax(300px,1fr)); gap:18px; }
+.fig { background:white; border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; }
+.fig img { width:100%; height:auto; border-radius:8px; }
+.table-wrap { width:100%; overflow-x:auto; margin-top:14px; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; white-space:nowrap; }
+.tbl th { background:var(--navy); color:white; padding:9px; text-align:left; }
+.tbl td { padding:8px 9px; border-bottom:1px solid var(--border); }
+.tbl tr:nth-child(even) { background:#f8fafc; }
+footer { text-align:center; color:var(--muted); margin-top:28px; font-size:13px; }
+@media (max-width:1200px) { .cards { grid-template-columns:repeat(3,1fr); } }
+@media (max-width:800px) { main { padding:18px; } .cards { grid-template-columns:repeat(2,1fr); } .figgrid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>LAB-Score v1.2 Summary Report</h1>
+  <p>Genome-based, safety-aware prioritization report for lactic acid bacteria candidates</p>
+</header>
+<main>
+  <div class="cards">
+    <div class="card"><div class="label">Genomes scored</div><div class="value">3813</div></div>
+    <div class="card"><div class="label">Raw Elite tier</div><div class="value">221</div></div>
+    <div class="card"><div class="label">Raw High tier</div><div class="value">1136</div></div>
+    <div class="card"><div class="label">Pass</div><div class="value">3313</div></div>
+    <div class="card"><div class="label">Cautionary review</div><div class="value">157</div></div>
+    <div class="card"><div class="label">Critical review</div><div class="value">343</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tabbtn active" onclick="openTab(event,'overview')">Overview</button>
+    <button class="tabbtn" onclick="openTab(event,'tiers')">Candidate tiers</button>
+    <button class="tabbtn" onclick="openTab(event,'safety')">Safety status</button>
+    <button class="tabbtn" onclick="openTab(event,'top')">Top candidates</button>
+    <button class="tabbtn" onclick="openTab(event,'species')">Species summary</button>
+    <button class="tabbtn" onclick="openTab(event,'ml')">Functional drivers / ML</button>
+    <button class="tabbtn" onclick="openTab(event,'sensitivity')">Sensitivity</button>
+    <button class="tabbtn" onclick="openTab(event,'baseline')">Baselines</button>
+    <button class="tabbtn" onclick="openTab(event,'files')">Output files</button>
+  </div>
+
+  <section id="overview" class="tab active">
+    <h2>Overview</h2>
+    <p>LAB-Score v1.2 integrates safety screening, gastrointestinal-survival modules,
+    probiotic-associated functions, and fermentation-related features into a continuous
+    score and safety-gated candidate designation.</p>
+    <div class="note"><strong>Interpretation:</strong> LAB-Score is a decision-support
+    framework for selecting genomes for downstream experimental validation. It is not
+    definitive proof of probiotic efficacy or safety.</div>
+    
+    <div class="figgrid"><div class='fig'><h3>Figure 1. LAB-Score workflow</h3><img src='assets/fig1_workflow_overview.svg' alt='Figure 1. LAB-Score workflow'></div><div class='fig'><h3>Figure 2. LAB-Score distribution</h3><img src='assets/fig2_score_distribution.png' alt='Figure 2. LAB-Score distribution'></div><div class='fig'><h3>Figure 3. Refined candidate tiers</h3><img src='assets/fig3_candidate_tiers.png' alt='Figure 3. Refined candidate tiers'></div><div class='fig'><h3>Figure 4. Species summary</h3><img src='assets/fig4_species_summary.png' alt='Figure 4. Species summary'></div><div class='fig'><h3>Figure 5. Functional drivers</h3><img src='assets/fig5_ml_feature_importance.png' alt='Figure 5. Functional drivers'></div></div>
+  </section>
+
+  <section id="tiers" class="tab">
+    <h2>Candidate tiers</h2>
+    <p>Raw score tiers and safety-gated candidate labels must not be interpreted as the same quantity.</p>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Safety-gated candidate tier</th>
+      <th>n_genomes</th>
+      <th>percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Elite candidate</td>
+      <td>221</td>
+      <td>5.796</td>
+    </tr>
+    <tr>
+      <td>High candidate</td>
+      <td>1136</td>
+      <td>29.793</td>
+    </tr>
+    <tr>
+      <td>Moderate candidate</td>
+      <td>1197</td>
+      <td>31.393</td>
+    </tr>
+    <tr>
+      <td>Cautionary Moderate candidate</td>
+      <td>120</td>
+      <td>3.147</td>
+    </tr>
+    <tr>
+      <td>Low priority</td>
+      <td>759</td>
+      <td>19.906</td>
+    </tr>
+    <tr>
+      <td>Cautionary Low priority</td>
+      <td>37</td>
+      <td>0.970</td>
+    </tr>
+    <tr>
+      <td>Critical safety review</td>
+      <td>343</td>
+      <td>8.996</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h3>Compact score preview</h3>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>accession</th>
+      <th>full_species</th>
+      <th>strain</th>
+      <th>LAB_score_v1</th>
+      <th>Priority_class</th>
+      <th>Refined_safety_status</th>
+      <th>Safety-gated candidate tier</th>
+      <th>Safety_score</th>
+      <th>GI_survival_score</th>
+      <th>Functional_score</th>
+      <th>Fermentation_score</th>
+      <th>amrfinder_hits</th>
+      <th>vfdb_hits</th>
+      <th>resfinder_hits</th>
+      <th>biogenic_amines</th>
+      <th>hemolysin_markers</th>
+      <th>reasons</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GCF_029997055.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>Tw226</td>
+      <td>99.816</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.948</td>
+      <td>99.148</td>
+      <td>100.000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_002868775.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>K259</td>
+      <td>99.658</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.948</td>
+      <td>99.974</td>
+      <td>96.761</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_004101505.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SRCM103357</td>
+      <td>99.616</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.948</td>
+      <td>99.148</td>
+      <td>97.994</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_022936825.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>O11</td>
+      <td>99.557</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.593</td>
+      <td>99.856</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049517695.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>NG3-L3</td>
+      <td>99.536</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>99.148</td>
+      <td>98.741</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_047779755.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>P7</td>
+      <td>99.420</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>99.148</td>
+      <td>97.574</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001880185.2</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>MF1298</td>
+      <td>99.408</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>98.348</td>
+      <td>99.056</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018982875.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>O17</td>
+      <td>99.285</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>98.348</td>
+      <td>99.633</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_032190675.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.8.46</td>
+      <td>99.267</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>98.348</td>
+      <td>99.449</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018991465.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.8.46</td>
+      <td>99.260</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>98.348</td>
+      <td>97.574</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_023972895.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KW1</td>
+      <td>99.123</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>99.148</td>
+      <td>99.397</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001888265.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>K35</td>
+      <td>99.115</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.148</td>
+      <td>96.328</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_004730965.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>UNQLp11</td>
+      <td>99.081</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>97.391</td>
+      <td>99.502</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001982125.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>RI-266</td>
+      <td>99.005</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>97.391</td>
+      <td>96.945</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018993665.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.2.20</td>
+      <td>98.872</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>97.391</td>
+      <td>95.607</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_009756965.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>BK-022</td>
+      <td>98.737</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>98.348</td>
+      <td>97.128</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_026153115.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>L55</td>
+      <td>98.731</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>97.391</td>
+      <td>94.204</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518335.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L5</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518295.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L7</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518235.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L10</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518355.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L4</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049523775.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L1</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_002993485.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>IG6</td>
+      <td>98.702</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.777</td>
+      <td>95.987</td>
+      <td>95.607</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_004141755.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SRCM103297</td>
+      <td>98.683</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>99.593</td>
+      <td>89.313</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_026976315.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SRCM101587</td>
+      <td>98.676</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>98.348</td>
+      <td>96.525</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>
+  </section>
+
+  <section id="safety" class="tab">
+    <h2>Safety status</h2>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Refined_safety_status</th>
+      <th>n_genomes</th>
+      <th>percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Pass</td>
+      <td>3313</td>
+      <td>86.887</td>
+    </tr>
+    <tr>
+      <td>Critical</td>
+      <td>343</td>
+      <td>8.996</td>
+    </tr>
+    <tr>
+      <td>Caution</td>
+      <td>157</td>
+      <td>4.117</td>
+    </tr>
+  </tbody>
+</table></div>
+    
+  </section>
+
+  <section id="top" class="tab">
+    <h2>Top candidates</h2>
+    <p>Highest LAB-Score genomes. Safety status and reasons must be reviewed alongside rank.</p>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>accession</th>
+      <th>full_species</th>
+      <th>strain</th>
+      <th>LAB_score_v1</th>
+      <th>Priority_class</th>
+      <th>Refined_safety_status</th>
+      <th>Safety-gated candidate tier</th>
+      <th>Safety_score</th>
+      <th>GI_survival_score</th>
+      <th>Functional_score</th>
+      <th>Fermentation_score</th>
+      <th>reasons</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GCF_029997055.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>Tw226</td>
+      <td>99.816</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.948</td>
+      <td>99.148</td>
+      <td>100.000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_002868775.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>K259</td>
+      <td>99.658</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.948</td>
+      <td>99.974</td>
+      <td>96.761</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_004101505.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SRCM103357</td>
+      <td>99.616</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.948</td>
+      <td>99.148</td>
+      <td>97.994</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_022936825.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>O11</td>
+      <td>99.557</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.593</td>
+      <td>99.856</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049517695.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>NG3-L3</td>
+      <td>99.536</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>99.148</td>
+      <td>98.741</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_047779755.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>P7</td>
+      <td>99.420</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>99.148</td>
+      <td>97.574</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001880185.2</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>MF1298</td>
+      <td>99.408</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>98.348</td>
+      <td>99.056</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018982875.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>O17</td>
+      <td>99.285</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>98.348</td>
+      <td>99.633</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_032190675.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.8.46</td>
+      <td>99.267</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>98.348</td>
+      <td>99.449</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018991465.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.8.46</td>
+      <td>99.260</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>98.348</td>
+      <td>97.574</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_023972895.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KW1</td>
+      <td>99.123</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>99.148</td>
+      <td>99.397</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001888265.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>K35</td>
+      <td>99.115</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.148</td>
+      <td>96.328</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_004730965.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>UNQLp11</td>
+      <td>99.081</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>97.391</td>
+      <td>99.502</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001982125.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>RI-266</td>
+      <td>99.005</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>97.391</td>
+      <td>96.945</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018993665.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.2.20</td>
+      <td>98.872</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>97.391</td>
+      <td>95.607</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_009756965.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>BK-022</td>
+      <td>98.737</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>98.348</td>
+      <td>97.128</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_026153115.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>L55</td>
+      <td>98.731</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>97.391</td>
+      <td>94.204</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518335.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L5</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518295.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L7</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518235.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L10</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049518355.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L4</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049523775.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KY4-L1</td>
+      <td>98.704</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>98.938</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_002993485.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>IG6</td>
+      <td>98.702</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.777</td>
+      <td>95.987</td>
+      <td>95.607</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_004141755.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SRCM103297</td>
+      <td>98.683</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>99.593</td>
+      <td>89.313</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_026976315.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SRCM101587</td>
+      <td>98.676</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>98.348</td>
+      <td>96.525</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_032190655.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>14.8.42</td>
+      <td>98.499</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.148</td>
+      <td>90.165</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_043593105.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>14.8.42</td>
+      <td>98.499</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.148</td>
+      <td>90.165</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_002993465.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>IG2</td>
+      <td>98.402</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>93.758</td>
+      <td>99.974</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_018993965.2</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>LA0445</td>
+      <td>98.368</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>97.391</td>
+      <td>95.358</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_016804305.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>MS031</td>
+      <td>98.322</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>99.593</td>
+      <td>95.109</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_022701335.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>KZ0310</td>
+      <td>98.063</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>95.987</td>
+      <td>95.109</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_029228745.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>P2000</td>
+      <td>98.007</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>99.148</td>
+      <td>98.820</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_047277305.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>ZJ316PV</td>
+      <td>97.944</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>98.348</td>
+      <td>93.824</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_002751855.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>RI-031</td>
+      <td>97.944</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>98.348</td>
+      <td>93.824</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_020131335.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>DSM 8862</td>
+      <td>97.915</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>98.348</td>
+      <td>99.502</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_027676485.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>UN03-143</td>
+      <td>97.895</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>98.348</td>
+      <td>99.305</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_027675785.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>UN03-35</td>
+      <td>97.895</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>98.348</td>
+      <td>99.305</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_020552045.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>R95</td>
+      <td>97.881</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>99.830</td>
+      <td>96.197</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_030503695.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>BC299</td>
+      <td>97.777</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>99.148</td>
+      <td>96.525</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_029906425.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>HOM3201</td>
+      <td>97.710</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>99.331</td>
+      <td>98.348</td>
+      <td>82.074</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_030464565.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>VJLHD12L4</td>
+      <td>97.570</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>99.148</td>
+      <td>80.881</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_003966855.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>SN35N</td>
+      <td>97.507</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>99.148</td>
+      <td>93.824</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_032195525.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.8.2</td>
+      <td>97.490</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>93.758</td>
+      <td>98.466</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_032190575.1</td>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>7.2.15</td>
+      <td>97.444</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>95.568</td>
+      <td>98.348</td>
+      <td>88.828</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001888345.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>P26</td>
+      <td>97.398</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>98.348</td>
+      <td>83.740</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_001888405.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>P67</td>
+      <td>97.398</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>97.417</td>
+      <td>98.348</td>
+      <td>83.740</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_049524735.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>NG3-L1</td>
+      <td>97.367</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>98.610</td>
+      <td>95.987</td>
+      <td>85.169</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_039566735.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>Z55</td>
+      <td>97.350</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>95.987</td>
+      <td>98.571</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_039566665.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>Z22</td>
+      <td>97.346</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>95.987</td>
+      <td>98.531</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>GCF_039566255.1</td>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>Z33</td>
+      <td>97.325</td>
+      <td>Elite</td>
+      <td>Pass</td>
+      <td>Elite candidate</td>
+      <td>100</td>
+      <td>93.181</td>
+      <td>95.987</td>
+      <td>98.322</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table></div>
+  </section>
+
+  <section id="species" class="tab">
+    <h2>Species summary</h2>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Species</th>
+      <th>n_genomes</th>
+      <th>mean_LAB_score</th>
+      <th>median_LAB_score</th>
+      <th>max_LAB_score</th>
+      <th>n_elite_tier</th>
+      <th>n_high_tier</th>
+      <th>n_critical_review</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lactiplantibacillus pentosus</td>
+      <td>111</td>
+      <td>94.806</td>
+      <td>95.407</td>
+      <td>99.557</td>
+      <td>65</td>
+      <td>45</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Lactiplantibacillus paraplantarum</td>
+      <td>24</td>
+      <td>89.892</td>
+      <td>90.681</td>
+      <td>95.830</td>
+      <td>4</td>
+      <td>19</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lactiplantibacillus plantarum</td>
+      <td>1233</td>
+      <td>88.390</td>
+      <td>89.032</td>
+      <td>99.816</td>
+      <td>152</td>
+      <td>994</td>
+      <td>57</td>
+    </tr>
+    <tr>
+      <td>Lacticaseibacillus rhamnosus</td>
+      <td>329</td>
+      <td>77.874</td>
+      <td>77.195</td>
+      <td>87.135</td>
+      <td>0</td>
+      <td>56</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>Lacticaseibacillus paracasei</td>
+      <td>17</td>
+      <td>77.174</td>
+      <td>79.216</td>
+      <td>85.629</td>
+      <td>0</td>
+      <td>7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Lactiplantibacillus argentoratensis</td>
+      <td>33</td>
+      <td>76.763</td>
+      <td>79.098</td>
+      <td>86.060</td>
+      <td>0</td>
+      <td>15</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>Companilactobacillus paralimentarius</td>
+      <td>12</td>
+      <td>72.877</td>
+      <td>73.882</td>
+      <td>76.231</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Lentilactobacillus parabuchneri</td>
+      <td>27</td>
+      <td>72.802</td>
+      <td>71.854</td>
+      <td>77.071</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lentilactobacillus hilgardii</td>
+      <td>8</td>
+      <td>69.251</td>
+      <td>70.676</td>
+      <td>73.929</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Ligilactobacillus murinus</td>
+      <td>17</td>
+      <td>66.678</td>
+      <td>67.576</td>
+      <td>69.234</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Unknown sp.</td>
+      <td>11</td>
+      <td>65.344</td>
+      <td>66.492</td>
+      <td>79.554</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus paragasseri</td>
+      <td>84</td>
+      <td>64.538</td>
+      <td>65.419</td>
+      <td>69.738</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus helveticus</td>
+      <td>93</td>
+      <td>62.494</td>
+      <td>62.880</td>
+      <td>70.334</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Levilactobacillus brevis</td>
+      <td>120</td>
+      <td>62.428</td>
+      <td>63.140</td>
+      <td>78.731</td>
+      <td>0</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Latilactobacillus curvatus</td>
+      <td>66</td>
+      <td>62.214</td>
+      <td>62.512</td>
+      <td>75.629</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus gasseri</td>
+      <td>206</td>
+      <td>61.097</td>
+      <td>60.778</td>
+      <td>68.491</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus taiwanensis</td>
+      <td>29</td>
+      <td>60.208</td>
+      <td>60.129</td>
+      <td>64.210</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Ligilactobacillus salivarius</td>
+      <td>240</td>
+      <td>60.084</td>
+      <td>63.081</td>
+      <td>70.861</td>
+      <td>0</td>
+      <td>0</td>
+      <td>44</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus delbrueckii</td>
+      <td>60</td>
+      <td>59.332</td>
+      <td>60.253</td>
+      <td>66.662</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus acidophilus</td>
+      <td>93</td>
+      <td>59.315</td>
+      <td>59.085</td>
+      <td>64.133</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus crispatus</td>
+      <td>112</td>
+      <td>58.804</td>
+      <td>63.824</td>
+      <td>71.574</td>
+      <td>0</td>
+      <td>0</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <td>Limosilactobacillus secundus</td>
+      <td>2</td>
+      <td>57.727</td>
+      <td>57.727</td>
+      <td>58.274</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Latilactobacillus sakei</td>
+      <td>15</td>
+      <td>57.708</td>
+      <td>60.214</td>
+      <td>65.517</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Ligilactobacillus agilis</td>
+      <td>37</td>
+      <td>57.141</td>
+      <td>51.350</td>
+      <td>72.202</td>
+      <td>0</td>
+      <td>0</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Limosilactobacillus reuteri</td>
+      <td>308</td>
+      <td>56.843</td>
+      <td>58.532</td>
+      <td>67.547</td>
+      <td>0</td>
+      <td>0</td>
+      <td>58</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus johnsonii</td>
+      <td>35</td>
+      <td>56.427</td>
+      <td>60.818</td>
+      <td>67.281</td>
+      <td>0</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Limosilactobacillus fermentum</td>
+      <td>74</td>
+      <td>54.873</td>
+      <td>54.449</td>
+      <td>64.770</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus intestinalis</td>
+      <td>10</td>
+      <td>54.572</td>
+      <td>53.580</td>
+      <td>60.432</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Limosilactobacillus mucosae</td>
+      <td>16</td>
+      <td>54.307</td>
+      <td>56.295</td>
+      <td>60.445</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus mulieris</td>
+      <td>43</td>
+      <td>50.144</td>
+      <td>50.993</td>
+      <td>58.063</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Fructilactobacillus fructivorans</td>
+      <td>13</td>
+      <td>49.846</td>
+      <td>49.700</td>
+      <td>53.413</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus jensenii</td>
+      <td>63</td>
+      <td>49.069</td>
+      <td>48.881</td>
+      <td>50.724</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Apilactobacillus kunkeei</td>
+      <td>106</td>
+      <td>48.517</td>
+      <td>48.708</td>
+      <td>51.176</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Limosilactobacillus vaginalis</td>
+      <td>20</td>
+      <td>48.347</td>
+      <td>48.719</td>
+      <td>53.135</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Fructilactobacillus sanfranciscensis</td>
+      <td>51</td>
+      <td>44.565</td>
+      <td>46.137</td>
+      <td>47.676</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Ligilactobacillus aviarius</td>
+      <td>23</td>
+      <td>41.309</td>
+      <td>47.235</td>
+      <td>50.923</td>
+      <td>0</td>
+      <td>0</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>Lactobacillus iners</td>
+      <td>72</td>
+      <td>31.455</td>
+      <td>28.712</td>
+      <td>46.089</td>
+      <td>0</td>
+      <td>0</td>
+      <td>54</td>
+    </tr>
+  </tbody>
+</table></div>
+  </section>
+
+  <section id="ml" class="tab">
+    <h2>Functional drivers / ML</h2>
+    <p>The functional-only Random Forest is presented as the primary interpretability layer,
+    not as independent phenotype validation. The all-feature model is an internal score-reconstruction benchmark.</p>
+    <p><strong>Functional RF classification accuracy:</strong> 0.911
+    &nbsp;&nbsp; <strong>Functional RF regression R²:</strong> 0.964</p>
+    <h3>Model performance</h3>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Model</th>
+      <th>Metric</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RF_Regression_ALL</td>
+      <td>R2</td>
+      <td>0.995</td>
+    </tr>
+    <tr>
+      <td>RF_Regression_ALL</td>
+      <td>MAE</td>
+      <td>0.644</td>
+    </tr>
+    <tr>
+      <td>RF_Regression_FUNC</td>
+      <td>R2</td>
+      <td>0.964</td>
+    </tr>
+    <tr>
+      <td>RF_Regression_FUNC</td>
+      <td>MAE</td>
+      <td>1.697</td>
+    </tr>
+    <tr>
+      <td>RF_Class_ALL</td>
+      <td>Accuracy</td>
+      <td>0.958</td>
+    </tr>
+    <tr>
+      <td>RF_Class_FUNC</td>
+      <td>Accuracy</td>
+      <td>0.911</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h3>Functional feature importance</h3>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>feature</th>
+      <th>importance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CAZyme abundance</td>
+      <td>0.185</td>
+    </tr>
+    <tr>
+      <td>Acid and energy metabolism</td>
+      <td>0.118</td>
+    </tr>
+    <tr>
+      <td>Osmotic-stress tolerance</td>
+      <td>0.096</td>
+    </tr>
+    <tr>
+      <td>Cell envelope and EPS</td>
+      <td>0.076</td>
+    </tr>
+    <tr>
+      <td>Core metabolism</td>
+      <td>0.073</td>
+    </tr>
+    <tr>
+      <td>Vitamin-associated functions</td>
+      <td>0.070</td>
+    </tr>
+    <tr>
+      <td>Antipathogen and quorum sensing</td>
+      <td>0.062</td>
+    </tr>
+    <tr>
+      <td>Carbohydrate metabolism</td>
+      <td>0.059</td>
+    </tr>
+    <tr>
+      <td>Gut persistence</td>
+      <td>0.051</td>
+    </tr>
+    <tr>
+      <td>CRISPR defense</td>
+      <td>0.044</td>
+    </tr>
+    <tr>
+      <td>Alkaline-stress tolerance</td>
+      <td>0.042</td>
+    </tr>
+    <tr>
+      <td>Heat-stress tolerance</td>
+      <td>0.038</td>
+    </tr>
+    <tr>
+      <td>Cold-stress tolerance</td>
+      <td>0.026</td>
+    </tr>
+    <tr>
+      <td>Immunomodulation-associated functions</td>
+      <td>0.023</td>
+    </tr>
+    <tr>
+      <td>Surface adhesion</td>
+      <td>0.012</td>
+    </tr>
+    <tr>
+      <td>GABA-associated functions</td>
+      <td>0.011</td>
+    </tr>
+    <tr>
+      <td>Biofilm-associated adhesion</td>
+      <td>0.010</td>
+    </tr>
+    <tr>
+      <td>Bile resistance</td>
+      <td>0.006</td>
+    </tr>
+  </tbody>
+</table></div>
+    <div class="figgrid"><div class='fig'><h3>ML feature importance</h3><img src='assets/fig_ml_feature_importance.png' alt='ML feature importance'></div><div class='fig'><h3>ML actual versus predicted</h3><img src='assets/fig_ml_actual_vs_predicted.png' alt='ML actual versus predicted'></div><div class='fig'><h3>ML confusion matrix</h3><img src='assets/fig_ml_confusion_matrix.png' alt='ML confusion matrix'></div></div>
+  </section>
+
+  <section id="sensitivity" class="tab">
+    <h2>Weight sensitivity analysis</h2>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>weighting_scheme</th>
+      <th>spearman_vs_main_LAB_score</th>
+      <th>p_value</th>
+      <th>top100_overlap_with_main</th>
+      <th>top100_overlap_percent</th>
+      <th>n_elite</th>
+      <th>n_high</th>
+      <th>n_moderate</th>
+      <th>n_low</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>main_safety_heavy_0.45_0.25_0.20_0.10</td>
+      <td>1.000</td>
+      <td>&lt;0.001</td>
+      <td>100</td>
+      <td>100.000</td>
+      <td>221</td>
+      <td>1136</td>
+      <td>1382</td>
+      <td>1074</td>
+    </tr>
+    <tr>
+      <td>balanced_equal_0.25_each</td>
+      <td>0.986</td>
+      <td>&lt;0.001</td>
+      <td>82</td>
+      <td>82.000</td>
+      <td>75</td>
+      <td>995</td>
+      <td>723</td>
+      <td>2020</td>
+    </tr>
+    <tr>
+      <td>function_heavy_0.30_0.20_0.35_0.15</td>
+      <td>0.988</td>
+      <td>&lt;0.001</td>
+      <td>86</td>
+      <td>86.000</td>
+      <td>106</td>
+      <td>1040</td>
+      <td>749</td>
+      <td>1918</td>
+    </tr>
+    <tr>
+      <td>GI_survival_heavy_0.30_0.35_0.25_0.10</td>
+      <td>0.993</td>
+      <td>&lt;0.001</td>
+      <td>97</td>
+      <td>97.000</td>
+      <td>122</td>
+      <td>1036</td>
+      <td>736</td>
+      <td>1919</td>
+    </tr>
+    <tr>
+      <td>fermentation_heavy_0.30_0.20_0.20_0.30</td>
+      <td>0.983</td>
+      <td>&lt;0.001</td>
+      <td>72</td>
+      <td>72.000</td>
+      <td>96</td>
+      <td>1000</td>
+      <td>784</td>
+      <td>1933</td>
+    </tr>
+  </tbody>
+</table></div>
+  </section>
+
+  <section id="baseline" class="tab">
+    <h2>Baseline comparison</h2>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>baseline</th>
+      <th>spearman_vs_LAB_score</th>
+      <th>p_value</th>
+      <th>top100_overlap_with_LAB_score</th>
+      <th>top100_overlap_percent</th>
+      <th>elite_recovered_in_baseline_top100</th>
+      <th>n_main_elite</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Safety_only_score</td>
+      <td>0.406</td>
+      <td>&lt;0.001</td>
+      <td>64</td>
+      <td>64.000</td>
+      <td>81</td>
+      <td>221</td>
+    </tr>
+    <tr>
+      <td>GI_only_score</td>
+      <td>0.932</td>
+      <td>&lt;0.001</td>
+      <td>53</td>
+      <td>53.000</td>
+      <td>80</td>
+      <td>221</td>
+    </tr>
+    <tr>
+      <td>Functional_only_score</td>
+      <td>0.918</td>
+      <td>&lt;0.001</td>
+      <td>48</td>
+      <td>48.000</td>
+      <td>65</td>
+      <td>221</td>
+    </tr>
+    <tr>
+      <td>Fermentation_only_score</td>
+      <td>0.892</td>
+      <td>&lt;0.001</td>
+      <td>30</td>
+      <td>30.000</td>
+      <td>43</td>
+      <td>221</td>
+    </tr>
+    <tr>
+      <td>Function_plus_fermentation_score</td>
+      <td>0.924</td>
+      <td>&lt;0.001</td>
+      <td>54</td>
+      <td>54.000</td>
+      <td>63</td>
+      <td>221</td>
+    </tr>
+    <tr>
+      <td>No_safety_score</td>
+      <td>0.959</td>
+      <td>&lt;0.001</td>
+      <td>96</td>
+      <td>96.000</td>
+      <td>100</td>
+      <td>221</td>
+    </tr>
+  </tbody>
+</table></div>
+  </section>
+
+  <section id="files" class="tab">
+    <h2>Output files</h2>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>status</th>
+      <th>path</th>
+      <th>size_bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Available</td>
+      <td>09_scores/LAB_score_v1.tsv</td>
+      <td>1810832</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>09_scores/top100_candidates.tsv</td>
+      <td>41253</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>09_scores/species_mean_scores.tsv</td>
+      <td>4152</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>10_ml/model_performance_summary.tsv</td>
+      <td>265</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>10_ml/RF_classification_functional_feature_importance.tsv</td>
+      <td>850</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>13_sensitivity/weight_sensitivity_summary.tsv</td>
+      <td>550</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>14_baselines/baseline_comparison_summary.tsv</td>
+      <td>516</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>15_release/LAB_SCORE_v1_2_release_manifest.tsv</td>
+      <td>2665</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>12_report/LAB_score_report.html</td>
+      <td>12552588</td>
+    </tr>
+  </tbody>
+</table></div>
+    <h3>Release manifest</h3>
+    <div class='table-wrap'><table class="dataframe tbl">
+  <thead>
+    <tr style="text-align: right;">
+      <th>description</th>
+      <th>relative_path</th>
+      <th>exists</th>
+      <th>size_bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Master matrix</td>
+      <td>08_master_matrix/master_matrix.tsv</td>
+      <td>True</td>
+      <td>3735854.000</td>
+    </tr>
+    <tr>
+      <td>Main LAB-Score table</td>
+      <td>09_scores/LAB_score_v1.tsv</td>
+      <td>True</td>
+      <td>1810832.000</td>
+    </tr>
+    <tr>
+      <td>Species mean scores</td>
+      <td>09_scores/species_mean_scores.tsv</td>
+      <td>True</td>
+      <td>4152.000</td>
+    </tr>
+    <tr>
+      <td>Priority class counts</td>
+      <td>09_scores/priority_class_counts.tsv</td>
+      <td>True</td>
+      <td>55.000</td>
+    </tr>
+    <tr>
+      <td>Top 100 candidates</td>
+      <td>09_scores/top100_candidates.tsv</td>
+      <td>True</td>
+      <td>41253.000</td>
+    </tr>
+    <tr>
+      <td>Score distribution summary</td>
+      <td>09_scores/LAB_score_distribution_summary.tsv</td>
+      <td>True</td>
+      <td>164.000</td>
+    </tr>
+    <tr>
+      <td>ML model performance</td>
+      <td>10_ml/model_performance_summary.tsv</td>
+      <td>True</td>
+      <td>265.000</td>
+    </tr>
+    <tr>
+      <td>ML functional feature importance</td>
+      <td>10_ml/RF_classification_functional_feature_importance.tsv</td>
+      <td>True</td>
+      <td>850.000</td>
+    </tr>
+    <tr>
+      <td>Figure outputs</td>
+      <td>11_figures</td>
+      <td>True</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Interactive strain report</td>
+      <td>12_report/LAB_score_report.html</td>
+      <td>True</td>
+      <td>12552588.000</td>
+    </tr>
+    <tr>
+      <td>Weight sensitivity summary</td>
+      <td>13_sensitivity/weight_sensitivity_summary.tsv</td>
+      <td>True</td>
+      <td>550.000</td>
+    </tr>
+    <tr>
+      <td>Baseline comparison summary</td>
+      <td>14_baselines/baseline_comparison_summary.tsv</td>
+      <td>True</td>
+      <td>516.000</td>
+    </tr>
+    <tr>
+      <td>Manuscript HTML summary report</td>
+      <td>16_html_report/LAB_SCORE_v1_2_summary_report.html</td>
+      <td>True</td>
+      <td>52813.000</td>
+    </tr>
+  </tbody>
+</table></div>
+  </section>
+
+  <footer>LAB-Score v1.2 portable HTML report generated from pipeline outputs.</footer>
+</main>
+<script>
+function openTab(evt, name) {
+  const tabs = document.getElementsByClassName("tab");
+  for (let i=0; i<tabs.length; i++) tabs[i].classList.remove("active");
+  const buttons = document.getElementsByClassName("tabbtn");
+  for (let i=0; i<buttons.length; i++) buttons[i].classList.remove("active");
+  document.getElementById(name).classList.add("active");
+  evt.currentTarget.classList.add("active");
+}
+</script>
+</body>
+</html>

@@ -22,8 +22,8 @@
 #   -m, --metadata FILE          Metadata TSV with genome/accession/species fields
 #   -q, --checkm                 Run CheckM QC [optional]
 #   -n, --ncbi                   NCBI auto-fetch species metadata [kept for compatibility]
-  --ref-dir DIR                Directory of LAB reference genomes for FastANI
-  --download-refs              Auto-download LAB reference genomes from NCBI
+#   --ref-dir DIR                Directory of LAB reference genomes for FastANI
+#   --download-refs              Auto-download LAB reference genomes from NCBI
 #
 # Installation/preflight options:
 #   --skip-install               Do not run installer before pipeline

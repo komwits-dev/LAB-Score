@@ -64,9 +64,9 @@ import_sample_dir() {
   base=$(basename "$sample_dir")
   sample=$(sanitize_sample "$base")
 
-  gff=$(find "$sample_dir" -maxdepth 1 -type f -name "*.gff" | sort | head -n 1 || true)
-  faa=$(find "$sample_dir" -maxdepth 1 -type f -name "*.faa" | sort | head -n 1 || true)
-  fna=$(find "$sample_dir" -maxdepth 1 -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) | sort | head -n 1 || true)
+  gff=$(find -L "$sample_dir" -maxdepth 1 -type f -name "*.gff" | sort | head -n 1 || true)
+  faa=$(find -L "$sample_dir" -maxdepth 1 -type f -name "*.faa" | sort | head -n 1 || true)
+  fna=$(find -L "$sample_dir" -maxdepth 1 -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) | sort | head -n 1 || true)
 
   if [[ -z "$gff" && -z "$faa" && -z "$fna" ]]; then
     return 0
@@ -91,7 +91,7 @@ import_sample_dir() {
 
   while IFS= read -r -d '' f; do
     ln -sfn "$f" "$out_sample/$(basename "$f")"
-  done < <(find "$sample_dir" -maxdepth 1 -type f -print0)
+  done < <(find -L "$sample_dir" -maxdepth 1 -type f -print0)
 
   if [[ -z "$gff" ]]; then
     echo "[prepare-prokka] WARNING: no GFF found for $sample" >&2
@@ -120,7 +120,7 @@ import_sample_dir() {
 # This supports nested layouts such as annotations_prokka_GCA/Species/GCA_*/.
 while IFS= read -r -d '' sample_dir; do
   import_sample_dir "$sample_dir"
-done < <(find "$PROKKA_IN_ABS" -mindepth 1 -type d -print0 | sort -z)
+done < <(find -L "$PROKKA_IN_ABS" -mindepth 1 -type d -print0 | sort -z)
 
 # If no directories were imported, try flat Prokka layout in PROKKA_IN itself.
 if [[ "$count" -eq 0 ]]; then
@@ -154,7 +154,7 @@ if [[ "$count" -eq 0 ]]; then
 
     echo -e "$sample\t$PROKKA_IN_ABS\t$gff\t$([[ -f "$faa" ]] && echo "$faa" || echo NA)\t$([[ -f "$fna" ]] && echo "$fna" || echo NA)\t$status" >> "$MANIFEST"
     count=$((count + 1))
-  done < <(find "$PROKKA_IN_ABS" -maxdepth 1 -type f -name "*.gff" -print0 | sort -z)
+  done < <(find -L "$PROKKA_IN_ABS" -maxdepth 1 -type f -name "*.gff" -print0 | sort -z)
 fi
 
 if [[ "$count" -eq 0 ]]; then

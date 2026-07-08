@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-11_make_figures.py — Publication figures for LAB-Score v1.1/v2.0
+11_make_figures.py — Publication figures for LAB-Score v1.2/v2.0
 
 Fig 2: Score distribution + priority class pie
 Fig 3: Refined safety-gated candidate tiers + safety status
@@ -177,10 +177,10 @@ scores = df["LAB_score_v1"].dropna().values
 x_grid = np.linspace(max(0, scores.min()-2), min(100, scores.max()+2), 500)
 
 regions = [
-    (0,  50, "#FFDDD2", "Low\n(<50)"),
-    (50, 70, "#D8F3DC", "Moderate\n(50–69)"),
-    (70, 85, "#95D5B2", "High\n(70–84)"),
-    (85,100, "#2D6A4F", "Elite\n(≥85)"),
+    (0,  60, "#FFDDD2", "Low\n(<60)"),
+    (60, 80, "#D8F3DC", "Moderate\n(60–79)"),
+    (80, 95, "#95D5B2", "High\n(80–94)"),
+    (95,100, "#2D6A4F", "Elite\n(≥95)"),
 ]
 for lo, hi, col, label in regions:
     ax_dist.axvspan(lo, hi, color=col, alpha=0.35, zorder=1)
@@ -198,10 +198,10 @@ if len(scores) > 3:
     except Exception:
         pass
 
-for val, col in [(50,"#E07C24"),(70,"#2D6A4F"),(85,"#1B4332")]:
+for val, col in [(60,"#E07C24"),(80,"#2D6A4F"),(95,"#1B4332")]:
     ax_dist.axvline(val, color=col, lw=1.8, ls="--", zorder=4)
 
-ax_dist.set_xlabel("LAB-Score v1.1")
+ax_dist.set_xlabel("LAB-Score v1.2")
 ax_dist.set_ylabel("Density")
 ax_dist.set_title(f"LAB-Score Distribution (n = {len(scores):,} genomes)", fontweight="bold")
 
@@ -223,7 +223,7 @@ legend_patches = [mpatches.Patch(color=PALETTE[c], label=f"{c} (n={class_counts[
 ax_pie.legend(handles=legend_patches, loc="lower center", bbox_to_anchor=(0.5, -0.25), fontsize=9, frameon=False)
 ax_pie.set_title("Priority Classes", fontweight="bold", fontsize=12)
 
-plt.suptitle("Figure 2. LAB-Score v1.1 Distribution and Priority Classification",
+plt.suptitle("Figure 2. LAB-Score v1.2 Distribution and Priority Classification",
              fontsize=13, fontweight="bold", y=1.02)
 plt.tight_layout()
 save_figure(fig, "fig2_score_distribution")
@@ -338,9 +338,9 @@ def draw_single_species_fig4(score_df, sp_summary):
     ax.set_yticks(y)
     ax.set_yticklabels(labels, fontsize=7.5)
     ax.set_xlim(0, 103)
-    ax.set_xlabel("LAB-Score v1.1")
+    ax.set_xlabel("LAB-Score v1.2")
     ax.set_title(f"A. Within-species genome ranking\n{italic_species_name(species_name)}", fontweight="bold")
-    for cutoff in [50, 70, 85]:
+    for cutoff in [60, 80, 95]:
         ax.axvline(cutoff, color="#666666", linestyle="--", linewidth=1, alpha=0.55)
     for yi, score in enumerate(plot["LAB_score_v1"]):
         ax.text(score + 0.8, yi, f"{score:.1f}", va="center", fontsize=7.5)
@@ -406,13 +406,13 @@ def draw_multi_species_fig4(sp_summary):
     ax.scatter(sp_plot["mean_LAB_score"], y, s=size, color="#1B4332", edgecolor="white", linewidth=1.2, zorder=3)
     for yi, row in enumerate(sp_plot.itertuples(index=False)):
         ax.text(row.max_LAB_score + 1.0, yi, f"n={int(row.N)}", va="center", fontsize=8.5, color="#333333")
-    for v in [50, 70, 85]:
+    for v in [60, 80, 95]:
         ax.axvline(v, color="#999999", lw=1.0, ls="--", alpha=0.55)
     ax.set_yticks(y)
     ax.set_yticklabels(ylabels, fontsize=8.5)
     ax.invert_yaxis()
     ax.set_xlim(0, 103)
-    ax.set_xlabel("LAB-Score v1.1")
+    ax.set_xlabel("LAB-Score v1.2")
     ax.set_title("A. Top species by mean LAB-Score\nline = min–max; dot = mean; size = n", fontweight="bold")
     ax.grid(axis="x", alpha=0.25)
 
@@ -458,12 +458,12 @@ def draw_unresolved_species_fig4(score_df):
     ax.set_yticks(y)
     ax.set_yticklabels(labels, fontsize=7.5)
     ax.invert_yaxis()
-    for v in [50,70,85]:
+    for v in [60,80,95]:
         ax.axvline(v, color="#999999", lw=1.0, ls="--", alpha=0.6)
     for yi, score in enumerate(top["LAB_score_v1"]):
         ax.text(score + 0.8, yi, f"{score:.1f}", va="center", fontsize=8)
     ax.set_xlim(0, 103)
-    ax.set_xlabel("LAB-Score v1.1")
+    ax.set_xlabel("LAB-Score v1.2")
     ax.set_title("A. Top-ranked genomes by LAB-Score", fontweight="bold")
     ax.grid(axis="x", alpha=0.25)
 
@@ -542,7 +542,7 @@ for ax, fi_df, title in [
     ax.grid(axis="x", alpha=0.3, zorder=1)
     ax.set_axisbelow(True)
 
-plt.suptitle("Figure 5. Machine Learning Feature Importance — LAB-Score v1.1",
+plt.suptitle("Figure 5. Machine Learning Feature Importance — LAB-Score v1.2",
              fontsize=13, fontweight="bold", y=1.02)
 plt.tight_layout()
 save_figure(fig, "fig5_ml_feature_importance")

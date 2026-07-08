@@ -2,7 +2,7 @@
 """
 13_weight_sensitivity_analysis.py
 =================================
-Robustness analysis for LAB-Score v1.1 component weights.
+Robustness analysis for LAB-Score v1.2 component weights.
 
 Compares the main safety-weighted LAB-Score against alternative weighting
 schemes and reports rank correlation, top-candidate overlap, and class counts.
@@ -13,7 +13,7 @@ import os
 import pandas as pd
 from scipy.stats import spearmanr
 
-ap = argparse.ArgumentParser(description="LAB-Score v1.1 weight sensitivity analysis")
+ap = argparse.ArgumentParser(description="LAB-Score v1.2 weight sensitivity analysis")
 ap.add_argument("--scores", required=True, help="LAB_score_v1.tsv from 09_calculate_lab_score.py")
 ap.add_argument("--outdir", required=True, help="Output directory")
 ap.add_argument("--top-n", type=int, default=100, help="Top-N overlap to evaluate [100]")
@@ -72,11 +72,11 @@ for name, weights in weight_sets.items():
     df[f"LAB_score_{name}"] = sum(df[col].astype(float) * w for col, w in weights.items())
 
 def class_from_score(score):
-    if score >= 85:
+    if score >= 95:
         return "Elite"
-    if score >= 70:
+    if score >= 80:
         return "High"
-    if score >= 50:
+    if score >= 60:
         return "Moderate"
     return "Low"
 

@@ -21,19 +21,19 @@ plt.figure(figsize=(10, 6))
 
 # Background threshold zones
 plt.axvspan(df["LAB_score_v1"].min(), 50, alpha=0.12)
-plt.axvspan(50, 70, alpha=0.12)
-plt.axvspan(70, 85, alpha=0.12)
+plt.axvspan(60, 80, alpha=0.12)
+plt.axvspan(80, 95, alpha=0.12)
 plt.axvspan(85, df["LAB_score_v1"].max() + 2, alpha=0.12)
 
 plt.hist(df["LAB_score_v1"], bins=40, edgecolor="black", linewidth=0.4)
 
-for x in [50, 70, 85]:
+for x in [60, 80, 95]:
     plt.axvline(x, linestyle="--", linewidth=1.5)
 
-plt.text(40, plt.ylim()[1]*0.92, "Low\n(<50)", ha="center", va="top", fontsize=11, fontweight="bold")
-plt.text(60, plt.ylim()[1]*0.92, "Moderate\n(50–69.9)", ha="center", va="top", fontsize=11, fontweight="bold")
-plt.text(77.5, plt.ylim()[1]*0.92, "High\n(70–84.9)", ha="center", va="top", fontsize=11, fontweight="bold")
-plt.text(88, plt.ylim()[1]*0.92, "Elite\n(≥85)", ha="center", va="top", fontsize=11, fontweight="bold")
+plt.text(40, plt.ylim()[1]*0.92, "Low\n(<60)", ha="center", va="top", fontsize=11, fontweight="bold")
+plt.text(60, plt.ylim()[1]*0.92, "Moderate\n(60–79.9)", ha="center", va="top", fontsize=11, fontweight="bold")
+plt.text(77.5, plt.ylim()[1]*0.92, "High\n(80–94.9)", ha="center", va="top", fontsize=11, fontweight="bold")
+plt.text(88, plt.ylim()[1]*0.92, "Elite\n(≥95)", ha="center", va="top", fontsize=11, fontweight="bold")
 
 plt.xlabel("LAB-Score v1")
 plt.ylabel("Number of genomes")

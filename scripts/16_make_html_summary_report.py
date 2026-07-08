@@ -2,7 +2,7 @@
 """
 16_make_html_summary_report_portable.py
 
-Portable manuscript-style LAB-Score v1.1 HTML summary report.
+Portable manuscript-style LAB-Score v1.2 HTML summary report.
 
 Key fixes:
 - Copies figures into 16_html_report/assets so the report remains usable after transfer.
@@ -24,7 +24,7 @@ def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pipeline-outdir", required=True)
     ap.add_argument("--outdir", required=True)
-    ap.add_argument("--title", default="LAB-Score v1.1 Summary Report")
+    ap.add_argument("--title", default="LAB-Score v1.2 Summary Report")
     return ap.parse_args()
 
 
@@ -39,7 +39,14 @@ def read_tsv(base: Path, rel: str):
         return None
 
 
-def table_html(df, columns=None, max_rows=30, empty_message="No table available."):
+def table_html(
+    df,
+    columns=None,
+    max_rows=30,
+    empty_message="No table available.",
+    rename_columns=None,
+    drop_columns=None,
+):
     if df is None or df.empty:
         return f"<p class='warn'>{html.escape(empty_message)}</p>"
 
@@ -49,12 +56,24 @@ def table_html(df, columns=None, max_rows=30, empty_message="No table available.
         if existing:
             show = show[existing]
 
+    if drop_columns:
+        show = show.drop(columns=[c for c in drop_columns if c in show.columns])
+
+    if rename_columns:
+        show = show.rename(columns=rename_columns)
+
     show = show.head(max_rows).copy()
+
     for col in show.columns:
         if pd.api.types.is_float_dtype(show[col]):
-            show[col] = show[col].map(
-                lambda value: "" if pd.isna(value) else f"{value:.3f}"
-            )
+            if "p_value" in str(col).lower() or str(col).lower() in {"p", "p value"}:
+                show[col] = show[col].map(
+                    lambda value: "" if pd.isna(value) else ("<0.001" if float(value) < 0.001 else f"{float(value):.3f}")
+                )
+            else:
+                show[col] = show[col].map(
+                    lambda value: "" if pd.isna(value) else f"{value:.3f}"
+                )
         else:
             show[col] = show[col].fillna("")
 
@@ -127,8 +146,9 @@ def metric_value(df, model, metric):
 args = parse_args()
 base = Path(args.pipeline_outdir).expanduser().resolve()
 outdir = Path(args.outdir).expanduser().resolve()
+repo_root = Path(__file__).resolve().parent.parent
 outdir.mkdir(parents=True, exist_ok=True)
-out_html = outdir / "LAB_SCORE_v1_1_summary_report.html"
+out_html = outdir / "LAB_SCORE_v1_2_summary_report.html"
 
 scores = read_tsv(base, "09_scores/LAB_score_v1.tsv")
 priority = read_tsv(base, "09_scores/priority_class_counts.tsv")
@@ -202,9 +222,33 @@ if species is None:
     species = species_file
 ml_perf = read_tsv(base, "10_ml/model_performance_summary.tsv")
 ml_feat = read_tsv(base, "10_ml/RF_classification_functional_feature_importance.tsv")
+if ml_feat is not None and "feature" in ml_feat.columns:
+    feature_labels = {
+        "CAZyme_total": "CAZyme abundance",
+        "acid_energy.acid_energy": "Acid and energy metabolism",
+        "osmoticstress.osmoticstress": "Osmotic-stress tolerance",
+        "cellenvelope_eps.cellenvelope_eps": "Cell envelope and EPS",
+        "metabolism.metabolism": "Core metabolism",
+        "vitamins.vitamins": "Vitamin-associated functions",
+        "antipath_qs.antipath_qs": "Antipathogen and quorum sensing",
+        "carbohydrate.carbohydrate": "Carbohydrate metabolism",
+        "gutpersistence.gutpersistence": "Gut persistence",
+        "defense_crispr.defense_crispr": "CRISPR defense",
+        "alkalinestress.alkalinestress": "Alkaline-stress tolerance",
+        "heatstress.heatstress": "Heat-stress tolerance",
+        "coldstress.coldstress": "Cold-stress tolerance",
+        "immunomodulation.immunomodulation": "Immunomodulation-associated functions",
+        "adhesion_surface.adhesion_surface": "Surface adhesion",
+        "adhesion_biofilm.adhesion_biofilm": "Biofilm-associated adhesion",
+        "bileresistance.bileresistance": "Bile resistance",
+        "gaba.gaba": "GABA-associated functions",
+    }
+    ml_feat = ml_feat.copy()
+    ml_feat["feature"] = ml_feat["feature"].map(feature_labels).fillna(ml_feat["feature"])
 sensitivity = read_tsv(base, "13_sensitivity/weight_sensitivity_summary.tsv")
 baselines = read_tsv(base, "14_baselines/baseline_comparison_summary.tsv")
-manifest = read_tsv(base, "15_release/LAB_SCORE_v1_1_release_manifest.tsv")
+manifest = read_tsv(base, "15_release/LAB_SCORE_v1_2_release_manifest.tsv")
+
 
 n_genomes = len(scores) if scores is not None else "NA"
 raw_elite = count_equals(scores, "Priority_class", "Elite")
@@ -219,9 +263,16 @@ if scores is not None and "Refined_safety_status" in scores.columns:
     caution_n = int(safety.isin(["Caution", "Cautionary safety review"]).sum())
     critical_n = int(safety.isin(["Critical", "Critical safety review"]).sum())
 
+tier_col = None
+if scores is not None:
+    for candidate in ["Candidate_tier_v1_2", "Candidate_tier_v1_1"]:
+        if candidate in scores.columns:
+            tier_col = candidate
+            break
+
 safety_clear_high_elite = 0
-if scores is not None and "Candidate_tier_v1_1" in scores.columns:
-    tier = scores["Candidate_tier_v1_1"].astype(str)
+if scores is not None and tier_col is not None:
+    tier = scores[tier_col].astype(str)
     safety_clear_high_elite = int(
         tier.isin(["Elite candidate", "High candidate"]).sum()
     )
@@ -230,17 +281,33 @@ func_acc = metric_value(ml_perf, "RF_Class_FUNC", "Accuracy")
 func_r2 = metric_value(ml_perf, "RF_Regression_FUNC", "R2")
 
 tier_counts = None
-if scores is not None and "Candidate_tier_v1_1" in scores.columns:
+if scores is not None and tier_col is not None:
     tier_counts = (
-        scores["Candidate_tier_v1_1"]
+        scores[tier_col]
         .fillna("Unclassified")
         .value_counts()
-        .rename_axis("Candidate_tier_v1_1")
+        .rename_axis("Safety-gated candidate tier")
         .reset_index(name="n_genomes")
     )
     tier_counts["percentage"] = (
         100.0 * tier_counts["n_genomes"] / len(scores)
     )
+    tier_order = [
+        "Elite candidate",
+        "High candidate",
+        "Moderate candidate",
+        "Cautionary Moderate candidate",
+        "Low priority",
+        "Cautionary Low priority",
+        "Critical safety review",
+        "Unclassified",
+    ]
+    tier_counts["_order"] = pd.Categorical(
+        tier_counts["Safety-gated candidate tier"],
+        categories=tier_order,
+        ordered=True,
+    )
+    tier_counts = tier_counts.sort_values("_order").drop(columns="_order")
 
 safety_counts = None
 if scores is not None and "Refined_safety_status" in scores.columns:
@@ -275,6 +342,7 @@ fig_overview = "".join(
             [
                 "11_figures/fig1_workflow_overview.svg",
                 "11_figures/lab_score_workflow.svg",
+                repo_root / "docs/images/lab_score_workflow.svg",
                 "11_figures/fig1_workflow_overview.png",
                 "11_figures/lab_score_workflow_overview_diagram.png",
             ],
@@ -339,7 +407,7 @@ score_preview_columns = [
     "LAB_score_v1",
     "Priority_class",
     "Refined_safety_status",
-    "Candidate_tier_v1_1",
+    tier_col,
     "Safety_score",
     "GI_survival_score",
     "Functional_score",
@@ -351,6 +419,7 @@ score_preview_columns = [
     "hemolysin_markers",
     "reasons",
 ]
+score_preview_columns = [c for c in score_preview_columns if c]
 
 top_columns = [
     "accession",
@@ -359,13 +428,14 @@ top_columns = [
     "LAB_score_v1",
     "Priority_class",
     "Refined_safety_status",
-    "Candidate_tier_v1_1",
+    tier_col,
     "Safety_score",
     "GI_survival_score",
     "Functional_score",
     "Fermentation_score",
     "reasons",
 ]
+top_columns = [c for c in top_columns if c]
 
 species_columns = [
     "Species",
@@ -387,7 +457,7 @@ for rel in [
     "10_ml/RF_classification_functional_feature_importance.tsv",
     "13_sensitivity/weight_sensitivity_summary.tsv",
     "14_baselines/baseline_comparison_summary.tsv",
-    "15_release/LAB_SCORE_v1_1_release_manifest.tsv",
+    "15_release/LAB_SCORE_v1_2_release_manifest.tsv",
     "12_report/LAB_score_report.html",
 ]:
     p = base / rel
@@ -453,10 +523,10 @@ footer {{ text-align:center; color:var(--muted); margin-top:28px; font-size:13px
 <main>
   <div class="cards">
     <div class="card"><div class="label">Genomes scored</div><div class="value">{n_genomes}</div></div>
-    <div class="card"><div class="label">Raw Elite score tier</div><div class="value">{raw_elite}</div></div>
-    <div class="card"><div class="label">Raw High score tier</div><div class="value">{raw_high}</div></div>
-    <div class="card"><div class="label">No safety marker / Pass</div><div class="value">{pass_n}</div></div>
-    <div class="card"><div class="label">Safety-clear High + Elite</div><div class="value">{safety_clear_high_elite}</div></div>
+    <div class="card"><div class="label">Raw Elite tier</div><div class="value">{raw_elite}</div></div>
+    <div class="card"><div class="label">Raw High tier</div><div class="value">{raw_high}</div></div>
+    <div class="card"><div class="label">Pass</div><div class="value">{pass_n}</div></div>
+    <div class="card"><div class="label">Cautionary review</div><div class="value">{caution_n}</div></div>
     <div class="card"><div class="label">Critical review</div><div class="value">{critical_n}</div></div>
   </div>
 
@@ -474,7 +544,7 @@ footer {{ text-align:center; color:var(--muted); margin-top:28px; font-size:13px
 
   <section id="overview" class="tab active">
     <h2>Overview</h2>
-    <p>LAB-Score integrates safety screening, gastrointestinal-survival modules,
+    <p>LAB-Score v1.2 integrates safety screening, gastrointestinal-survival modules,
     probiotic-associated functions, and fermentation-related features into a continuous
     score and safety-gated candidate designation.</p>
     <div class="note"><strong>Interpretation:</strong> LAB-Score is a decision-support
@@ -489,7 +559,7 @@ footer {{ text-align:center; color:var(--muted); margin-top:28px; font-size:13px
     <p>Raw score tiers and safety-gated candidate labels must not be interpreted as the same quantity.</p>
     {table_html(tier_counts, max_rows=30)}
     <h3>Compact score preview</h3>
-    {table_html(scores, score_preview_columns, max_rows=25)}
+    {table_html(scores, score_preview_columns, max_rows=25, rename_columns={tier_col: "Safety-gated candidate tier"} if tier_col else None)}
   </section>
 
   <section id="safety" class="tab">
@@ -501,7 +571,7 @@ footer {{ text-align:center; color:var(--muted); margin-top:28px; font-size:13px
   <section id="top" class="tab">
     <h2>Top candidates</h2>
     <p>Highest LAB-Score genomes. Safety status and reasons must be reviewed alongside rank.</p>
-    {table_html(top100, top_columns, max_rows=50)}
+    {table_html(top100, top_columns, max_rows=50, rename_columns={tier_col: "Safety-gated candidate tier"} if tier_col else None)}
   </section>
 
   <section id="species" class="tab">
@@ -511,8 +581,8 @@ footer {{ text-align:center; color:var(--muted); margin-top:28px; font-size:13px
 
   <section id="ml" class="tab">
     <h2>Functional drivers / ML</h2>
-    <p>Functional-only Random Forest results are presented as an interpretability layer,
-    not as independent phenotype validation.</p>
+    <p>The functional-only Random Forest is presented as the primary interpretability layer,
+    not as independent phenotype validation. The all-feature model is an internal score-reconstruction benchmark.</p>
     <p><strong>Functional RF classification accuracy:</strong> {func_acc}
     &nbsp;&nbsp; <strong>Functional RF regression R²:</strong> {func_r2}</p>
     <h3>Model performance</h3>
@@ -536,10 +606,10 @@ footer {{ text-align:center; color:var(--muted); margin-top:28px; font-size:13px
     <h2>Output files</h2>
     {table_html(files_df, max_rows=30)}
     <h3>Release manifest</h3>
-    {table_html(manifest, max_rows=50)}
+    {table_html(manifest, max_rows=50, drop_columns=["path"])}
   </section>
 
-  <footer>LAB-Score v1.1 portable HTML report generated from pipeline outputs.</footer>
+  <footer>LAB-Score v1.2 portable HTML report generated from pipeline outputs.</footer>
 </main>
 <script>
 function openTab(evt, name) {{

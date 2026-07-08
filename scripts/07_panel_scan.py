@@ -30,8 +30,8 @@ PANELS = {
     r"atpA", r"atpB", r"atpC", r"atpD", r"atpE", r"atpF", r"atpG", r"atpH", r"atpI",
     r"F.type.ATP.synthase", r"ATP.synthase", r"H\+.transporting",
     r"proton.translocating.ATP",
-    r"gadA", r"gadB", r"gadC",
-    r"glutamate.decarboxylase", r"glutamate.GABA.antiporter",
+    # GAD/GABA markers are counted only in the dedicated GABA panel
+    # to avoid double-counting the same genes in two score components.
     r"acid.resistance", r"acid.tolerance", r"proton.motive",
 ],
 
@@ -114,11 +114,12 @@ PANELS = {
 ],
 
 "gaba": [
+    # GABA-production/transport system only. Catabolic markers such as
+    # gabT/gabD are excluded because they do not demonstrate GABA production.
     r"glutamate.decarboxylase",
-    r"gadA", r"gadB",
-    r"GABA.transaminase", r"4.aminobutyrate",
+    r"\bgadA\b", r"\bgadB\b", r"\bgadC\b",
+    r"glutamate.GABA.antiporter",
     r"gamma.aminobutyric",
-    r"succinate.semialdehyde", r"gabT", r"gabD",
     r"GABA.permease",
 ],
 

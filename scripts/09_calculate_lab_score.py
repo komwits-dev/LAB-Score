@@ -2,7 +2,7 @@
 """
 09_calculate_lab_score.py
 =========================
-Calculates LAB-Score v1.1 from the master matrix.
+Calculates LAB-Score v1.2 from the master matrix.
 
 Formula:
     LAB_score_v1 = 0.45 × Safety_score
@@ -10,7 +10,7 @@ Formula:
                  + 0.20 × Functional_score
                  + 0.10 × Fermentation_score
 
-Priority classes:     ≥85=Elite  70-84=High  50-69=Moderate  <50=Low
+Priority classes:     ≥95=Elite  80-94=High  60-79=Moderate  <60=Low
 Refined safety gate:  Critical / Cautionary / Pass
 """
 
@@ -38,12 +38,24 @@ def safe_col(df, col, default=0):
 # 1. Safety Score
 # ═══════════════════════════════════════════════════════════════════════════════
 # Penalty-based: start at 100, deduct for each safety concern
+critical_amr_present = (
+    safe_col(
+        df,
+        "amrfinder_critical_hits",
+        default=safe_col(df, "amrfinder_hits").astype(float),
+    ).astype(float) > 0
+)
+caution_amr_present = (
+    safe_col(df, "amrfinder_caution_hits").astype(float) > 0
+) & (~critical_amr_present)
+
 df["Safety_penalty"] = (
-    (safe_col(df,"amrfinder_hits").astype(float)  > 0).astype(int) * 40 +
-    (safe_col(df,"vfdb_hits").astype(float)        > 0).astype(int) * 30 +
-    (safe_col(df,"resfinder_hits").astype(float)   > 0).astype(int) * 20 +
-    (safe_col(df,"hemolysin_markers").astype(float)> 0).astype(int) * 15 +
-    (safe_col(df,"biogenic_amines").astype(float)  > 0).astype(int) * 15
+    critical_amr_present.astype(int) * 40 +
+    caution_amr_present.astype(int) * 15 +
+    (safe_col(df,"vfdb_hits").astype(float)         > 0).astype(int) * 30 +
+    (safe_col(df,"resfinder_hits").astype(float)    > 0).astype(int) * 20 +
+    (safe_col(df,"hemolysin_markers").astype(float) > 0).astype(int) * 15 +
+    (safe_col(df,"biogenic_amines").astype(float)   > 0).astype(int) * 15
 )
 df["Safety_score"] = (100 - df["Safety_penalty"]).clip(lower=0)
 
@@ -57,7 +69,6 @@ GI_COLS = [
     "osmoticstress.osmoticstress",
     "heatstress.heatstress",
     "coldstress.coldstress",
-    "gaba.gaba",
 ]
 GI_COLS = [c for c in GI_COLS if c in df.columns]
 df["GI_survival_raw"]   = df[GI_COLS].sum(axis=1)
@@ -67,9 +78,10 @@ df["GI_survival_score"] = pct_rank(df["GI_survival_raw"])
 # 3. Functional Score (probiotic-associated)
 # ═══════════════════════════════════════════════════════════════════════════════
 FUNC_COLS = [
+    "gaba.gaba",
     "vitamins.vitamins",
     "immunomodulation.immunomodulation",
-    "bacteriocins.bacteriocin",
+    "bacteriocins.bacteriocins",
     "cellenvelope_eps.cellenvelope_eps",
     "adhesion_surface.adhesion_surface",
     "adhesion_biofilm.adhesion_biofilm",
@@ -94,7 +106,7 @@ df["Fermentation_raw"]   = df[FERM_COLS].sum(axis=1)
 df["Fermentation_score"] = pct_rank(df["Fermentation_raw"])
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 5. Composite LAB-Score v1.1
+# 5. Composite LAB-Score v1.2
 # ═══════════════════════════════════════════════════════════════════════════════
 df["LAB_score_v1"] = (
     0.45 * df["Safety_score"] +
@@ -107,9 +119,9 @@ df["LAB_score_v1"] = (
 # 6. Priority classes (raw, before safety gate)
 # ═══════════════════════════════════════════════════════════════════════════════
 def assign_class(score):
-    if score >= 85: return "Elite"
-    elif score >= 70: return "High"
-    elif score >= 50: return "Moderate"
+    if score >= 95: return "Elite"
+    elif score >= 80: return "High"
+    elif score >= 60: return "Moderate"
     else: return "Low"
 
 df["Priority_class"] = df["LAB_score_v1"].apply(assign_class)
@@ -149,8 +161,14 @@ SCORE_COLS = [
     "LAB_score_v1","Priority_class",
     "Refined_safety_status","Candidate_tier_v1_1",
     "Safety_penalty","flag","reasons",
-    "amrfinder_hits","vfdb_hits","resfinder_hits",
-    "biogenic_amines","hemolysin_markers",
+    "amrfinder_hits","amrfinder_critical_hits","amrfinder_caution_hits",
+    "amrfinder_critical_symbols","amrfinder_caution_symbols",
+    "vfdb_hits","amrfinder_stress_hits","resfinder_hits",
+    "biogenic_amines","biogenic_amine_details",
+    "nonspecific_decarboxylase_annotations","nonspecific_decarboxylase_details",
+    "gaba_related_annotations","gaba_related_details",
+    "hemolysin_markers","hemolysin_marker_details",
+    "hemolysin_like_annotations","hemolysin_like_details",
     "GI_survival_raw","Functional_raw","Fermentation_raw",
     "CAZyme_total",
 ]

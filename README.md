@@ -30,14 +30,14 @@ The pipeline integrates:
 - functional trait panel scanning;
 - dbCAN-based CAZyme profiling;
 - genome quality integration;
-- LAB-Score v1.1 calculation;
+- LAB-Score v1.2 calculation;
 - machine-learning interpretation;
 - interactive radar-based strain comparison and exportable reports;
 - weight sensitivity analysis and baseline comparison;
 - manuscript-style tabbed HTML summary report.
 
 > **Pipeline version:** v3.6  
-> **Scoring model:** LAB-Score v1.1  
+> **Scoring model:** LAB-Score v1.2  
 > **Recommended use:** candidate prioritization before experimental validation.
 
 ---
@@ -89,7 +89,7 @@ The Gene Presence tab provides an interactive heatmap for comparing functional p
 
 ---
 
-## LAB-Score v1.1 refined safety-gated logic
+## LAB-Score v1.2 refined safety-gated logic
 
 LAB-Score uses a **refined safety-gated strategy**. Genomes with favorable functional profiles are prioritized only after safety screening, while genomes with cautionary or critical markers are retained but clearly separated for downstream interpretation.
 
@@ -105,10 +105,10 @@ LAB-Score uses a **refined safety-gated strategy**. Genomes with favorable funct
 
 | LAB-Score range | Tier |
 |---|---|
-| ≥85 | Elite candidate |
-| 70–84.9 | High candidate |
-| 50–69.9 | Moderate candidate |
-| <50 | Low priority |
+| ≥95 | Elite candidate |
+| 80–94.9 | High candidate |
+| 60–79.9 | Moderate candidate |
+| <60 | Low priority |
 
 If a genome has cautionary markers, the score-based tier receives a cautionary prefix, for example `Cautionary High candidate`. Genomes with AMR or virulence-associated markers are assigned to `Critical safety review`, regardless of the score.
 
@@ -118,7 +118,7 @@ If a genome has cautionary markers, the score-based tier receives a cautionary p
 
 ## Manuscript v1.1 release outputs
 
-The current release adds manuscript-scale robustness and reporting modules for LAB-Score v1.1.
+The current release adds manuscript-scale robustness and reporting modules for LAB-Score v1.2.
 
 | Output | Description |
 |---|---|
@@ -129,8 +129,8 @@ The current release adds manuscript-scale robustness and reporting modules for L
 | `10_ml/RF_classification_functional_feature_importance.tsv` | Functional-module feature importance |
 | `13_sensitivity/weight_sensitivity_summary.tsv` | Robustness across alternative scoring weights |
 | `14_baselines/baseline_comparison_summary.tsv` | Comparison with simplified baseline rankings |
-| `15_release/LAB_SCORE_v1_1_release_manifest.tsv` | File manifest for reproducibility |
-| `16_html_report/LAB_SCORE_v1_1_summary_report.html` | Tabbed manuscript-style HTML summary report |
+| `15_release/LAB_SCORE_v1_2_release_manifest.tsv` | File manifest for reproducibility |
+| `16_html_report/LAB_SCORE_v1_2_summary_report.html` | Tabbed manuscript-style HTML summary report |
 
 ### Manuscript figures
 
@@ -141,14 +141,14 @@ The `docs/manuscript/figures/` folder contains manuscript-ready figure drafts:
 | Figure 1 | LAB-Score workflow |
 | Figure 2 | LAB-Score distribution with thresholds |
 | Figure 3 | Refined safety-gated candidate tier distribution |
-| Figure 4 | Composition of LAB-Score v1.1 candidate tiers |
+| Figure 4 | Composition of LAB-Score v1.2 candidate tiers |
 | Figure 5 | Functional modules driving LAB-Score candidate prioritization |
 
 ### Robustness analyses
 
 The v3.6 release adds two robustness analyses:
 
-1. **Weight sensitivity analysis** — compares the main safety-heavy LAB-Score v1.1 formula with equal, function-heavy, GI-survival-heavy, and fermentation-heavy weighting schemes.
+1. **Weight sensitivity analysis** — compares the main safety-heavy LAB-Score v1.2 formula with equal, function-heavy, GI-survival-heavy, and fermentation-heavy weighting schemes.
 2. **Baseline comparison** — compares integrated LAB-Score rankings against safety-only, GI-only, functional-only, fermentation-only, function-plus-fermentation, and no-safety baseline rankings.
 
 ---
@@ -422,5 +422,5 @@ python scripts/16_make_html_summary_report.py \
 Open the summary report:
 
 ```bash
-xdg-open lab_score_out/16_html_report/LAB_SCORE_v1_1_summary_report.html
+xdg-open lab_score_out/16_html_report/LAB_SCORE_v1_2_summary_report.html
 ```

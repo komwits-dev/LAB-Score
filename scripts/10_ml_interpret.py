@@ -2,7 +2,7 @@
 """
 10_ml_interpret.py
 ==================
-Machine learning interpretation of LAB-Score v1.1.
+Machine learning interpretation of LAB-Score v1.2.
 Handles small datasets gracefully (n < 10).
 """
 
@@ -222,7 +222,7 @@ for ax, fi, title in [
     ax.set_xlabel("Feature Importance")
     ax.legend(fontsize=9)
     ax.grid(axis="x", alpha=0.3)
-plt.suptitle("Random Forest Feature Importance — LAB-Score v1.1", fontsize=14, fontweight="bold")
+plt.suptitle("Random Forest Feature Importance — LAB-Score v1.2", fontsize=14, fontweight="bold")
 plt.tight_layout()
 fig.savefig(f"{args.outdir}/fig_ml_feature_importance.png", dpi=300, bbox_inches="tight")
 plt.close()

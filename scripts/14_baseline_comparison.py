@@ -2,7 +2,7 @@
 """
 14_baseline_comparison.py
 =========================
-Compares LAB-Score v1.1 with simpler single-component or reduced-component
+Compares LAB-Score v1.2 with simpler single-component or reduced-component
 baseline rankings.
 """
 
@@ -57,7 +57,7 @@ top_main = set(df.sort_values(main_col, ascending=False).head(args.top_n)["Acces
 if "Priority_class" in df.columns:
     elite_main = set(df[df["Priority_class"] == "Elite"]["Accession"])
 else:
-    elite_main = set(df[df[main_col] >= 85]["Accession"])
+    elite_main = set(df[df[main_col] >= 95]["Accession"])
 
 rows = []
 for col in baseline_cols:

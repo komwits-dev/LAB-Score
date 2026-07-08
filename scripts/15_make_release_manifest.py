@@ -2,7 +2,7 @@
 """
 15_make_release_manifest.py
 ===========================
-Creates a TSV index of key LAB-Score v1.1 pipeline outputs for reproducibility.
+Creates a TSV index of key LAB-Score v1.2 pipeline outputs for reproducibility.
 """
 
 import argparse
@@ -31,7 +31,7 @@ files = [
     ("Interactive strain report", "12_report/LAB_score_report.html"),
     ("Weight sensitivity summary", "13_sensitivity/weight_sensitivity_summary.tsv"),
     ("Baseline comparison summary", "14_baselines/baseline_comparison_summary.tsv"),
-    ("Manuscript HTML summary report", "16_html_report/LAB_SCORE_v1_1_summary_report.html"),
+    ("Manuscript HTML summary report", "16_html_report/LAB_SCORE_v1_2_summary_report.html"),
 ]
 
 rows = []
@@ -46,7 +46,7 @@ for desc, rel in files:
     })
 
 df = pd.DataFrame(rows)
-out = outdir / "LAB_SCORE_v1_1_release_manifest.tsv"
+out = outdir / "LAB_SCORE_v1_2_release_manifest.tsv"
 df.to_csv(out, sep="\t", index=False)
 print("[manifest] Saved:", out)
 print(df.to_string(index=False))
